@@ -9,8 +9,14 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+      - /app/.vite  # Viteキャッシュディレクトリを除外
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - FAST_REFRESH=true
+      - VITE_HMR_PORT=3000
+      - VITE_FORCE_POLLING=true  # 追加の強制ポーリング
     networks:
       - app-network
 

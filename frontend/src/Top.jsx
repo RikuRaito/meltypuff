@@ -6,8 +6,10 @@ import './Top.css'
 function Top() {
 
   return (
-    <div top-container>
-      <p>トップページ</p>
+    <div className="top-container">
+      <p>fdasfトfdasップページfd</p>
+      <h3>fdasfsda</h3>
+      <h1></h1>
     </div>
   )
 }
