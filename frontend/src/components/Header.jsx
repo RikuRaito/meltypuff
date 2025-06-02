@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import './Header.css'
 
-function Header() {
-    const [cartCount, setCartCount] = useState(0)
+function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout }) {
     const [isScrolled, setIsScrolled] = useState(false)
+    const [showUserMenu, setShowUserMenu] = useState(false)
 
     // スクロール時のヘッダー背景変更
     useEffect(() => {
@@ -17,15 +17,27 @@ function Header() {
     }, [])
 
     // ページ遷移関数
-    const navigateTo = (path) => {
-        window.location.href = path
+    const handleNavigate = (path) => {
+        if (navigateTo) {
+            navigateTo(path)
+        } else {
+            window.location.href = path
+        }
+    }
+
+    // ログアウト処理
+    const handleLogout = () => {
+        if (onLogout) {
+            onLogout()
+        }
+        setShowUserMenu(false)
     }
 
     return (
         <header className={isScrolled ? 'scrolled' : ''}>
             <div className="header-container">
                 <div className="logo">
-                    <a href="/" className="logo-link">
+                    <a href="/" className="logo-link" onClick={(e) => { e.preventDefault(); handleNavigate('/') }}>
                         <img 
                             src="/images/logo.png" 
                             alt="Melty Puff logo" 
@@ -35,28 +47,27 @@ function Header() {
                     </a>
                 </div>
                 <nav className="nav-menu">
-                    <a href="/" onClick={(e) => { e.preventDefault(); navigateTo('/') }}>
+                    <a href="/" onClick={(e) => { e.preventDefault(); handleNavigate('/') }}>
                         HOME
                     </a>
                     <div className="nav-item dropdown">
                         <a 
                             href="/shop-non" 
                             className="dropdown-toggle"
-                            onClick={(e) => { e.preventDefault(); navigateTo('/shop-non') }}
+                            onClick={(e) => { e.preventDefault(); handleNavigate('/shop-non') }}
                         >
                             SHOP
                         </a>
-                        {/* CSSのhoverで制御されるドロップダウンメニュー */}
                         <div className="dropdown-menu">
                             <a 
                                 href="/shop-non"
-                                onClick={(e) => { e.preventDefault(); navigateTo('/shop-non') }}
+                                onClick={(e) => { e.preventDefault(); handleNavigate('/shop-non') }}
                             >
                                 ノンニコチン
                             </a>
                             <a 
                                 href="/shop-nic"
-                                onClick={(e) => { e.preventDefault(); navigateTo('/shop-nic') }}
+                                onClick={(e) => { e.preventDefault(); handleNavigate('/shop-nic') }}
                             >
                                 ニコチンベイプ
                             </a>
@@ -64,28 +75,79 @@ function Header() {
                     </div>
                     <a 
                         href="/contact"
-                        onClick={(e) => { e.preventDefault(); navigateTo('/contact') }}
+                        onClick={(e) => { e.preventDefault(); handleNavigate('/contact') }}
                     >
                         SUPPORT
                     </a>
                     <a 
                         href="/articles"
-                        onClick={(e) => { e.preventDefault(); navigateTo('/articles') }}
+                        onClick={(e) => { e.preventDefault(); handleNavigate('/articles') }}
                     >
                         ARTICLES
                     </a>
-                    <a 
-                        href="/account" 
-                        className="account-link" 
-                        id="account-link"
-                        onClick={(e) => { e.preventDefault(); navigateTo('/account') }}
-                    >
-                        ACCOUNT
-                    </a>
+                    
+                    {/* ログイン状態に応じてACCOUNTリンクを変更 */}
+                    {isLoggedIn ? (
+                        <div className="nav-item dropdown user-menu">
+                            <a 
+                                href="#" 
+                                className="user-name-link"
+                                onClick={(e) => { 
+                                    e.preventDefault(); 
+                                    setShowUserMenu(!showUserMenu) 
+                                }}
+                            >
+                                {user?.name || 'USER'}
+                            </a>
+                            {showUserMenu && (
+                                <div className="dropdown-menu user-dropdown">
+                                    <a 
+                                        href="/account"
+                                        onClick={(e) => { 
+                                            e.preventDefault(); 
+                                            handleNavigate('/account');
+                                            setShowUserMenu(false);
+                                        }}
+                                    >
+                                        マイページ
+                                    </a>
+                                    <a 
+                                        href="/orders"
+                                        onClick={(e) => { 
+                                            e.preventDefault(); 
+                                            handleNavigate('/orders');
+                                            setShowUserMenu(false);
+                                        }}
+                                    >
+                                        注文履歴
+                                    </a>
+                                    <a 
+                                        href="#"
+                                        onClick={(e) => { 
+                                            e.preventDefault(); 
+                                            handleLogout();
+                                        }}
+                                        className="logout-link"
+                                    >
+                                        ログアウト
+                                    </a>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <a 
+                            href="/account" 
+                            className="account-link" 
+                            onClick={(e) => { e.preventDefault(); handleNavigate('/login') }}
+                        >
+                            LOGIN
+                        </a>
+                    )}
+                    
                     <a 
                         href="/cart" 
                         className="cart-button"
-                        onClick={(e) => { e.preventDefault(); navigateTo('/cart') }}
+                        onClick={(e) => { e.preventDefault(); handleNavigate('/cart') }}
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
@@ -100,7 +162,7 @@ function Header() {
                                 strokeLinejoin="round" 
                                 d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                         </svg>   
-                        <span className="cart-count">{cartCount}</span>                   
+                        <span className="cart-count">{cartCount || 0}</span>                   
                     </a>
                 </nav>
             </div>

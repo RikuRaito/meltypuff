@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
 import './Top.css'
-
 
 function Top() {
 
   return (
     <div className="top-container">
-      <h1>test</h1>
+      <section className='hero-section'>
+        <video
+          className="background-video"
+          src='/images/vape.mp4'
+          autoPlay
+          muted     
+          loop
+        />
+      </section>
+      
     </div>
   )
 }

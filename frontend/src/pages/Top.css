@@ -1,42 +1,43 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.top-container {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.hero-section {
+    width: 100%;
+    height: calc(100vh - 100px);
+    overflow: hidden;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.background-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    object-fit: cover;
+    z-index: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* main-contentの無効化 */
+.top-container .main-content {
+  margin-top: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  justify-content: unset !important;
+  align-items: unset !important;
 }
 
-.card {
-  padding: 2em;
+/* bodyのスクロール動作を確保 */
+body:has(.top-container) {
+  overflow-x: hidden; /* 横スクロールは無効 */
+  overflow-y: auto;   /* 縦スクロールは有効 */
 }
 
-.read-the-docs {
-  color: #888;
-}
+
