@@ -1,0 +1,148 @@
+.site-footer {
+    background-color: #2c2c2c;
+    color: white;
+    padding: 0 0;
+    width: 100vw;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    margin-left: calc(-50vw + 50%);
+    box-sizing: border-box;
+    position:relative;
+}
+
+.footer-container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin: 0 auto;
+}
+
+.footer-container p {
+    margin: 0;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+.footer-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    width: 100%;
+}
+
+.footer-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+    display: inline-block;
+}
+
+.footer-nav a:hover {
+    color: #b43353;
+}
+
+/* 区切り文字 */
+.footer-nav a:not(.footer-instagram):not(:first-child)::before {
+    content: " | ";
+    color: #ccc;
+    margin: 0 10px;
+    font-weight: normal;
+}
+
+.footer-instagram {
+    margin-left: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.footer-instagram:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.footer-instagram svg {
+    width: 60px;
+    height: 60px;
+    transition: color 0.3s ease;
+}
+
+.footer-instagram:hover svg {
+    color: #b43353;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 50px 0;
+        min-height: 180px;
+    }
+    
+    .footer-container {
+        padding: 0 15px;
+        gap: 30px;
+    }
+    
+    .footer-nav {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .footer-nav a {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .footer-nav a:not(.footer-instagram):not(:first-child)::before {
+        display: none;
+    }
+    
+    .footer-instagram {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    
+    .footer-instagram svg {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-footer {
+        padding: 40px 0;
+        min-height: 160px;
+    }
+    
+    .footer-container {
+        padding: 0 10px;
+        gap: 25px;
+    }
+    
+    .footer-nav a {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+    
+    .footer-instagram svg {
+        width: 45px;
+        height: 45px;
+    }
+}
