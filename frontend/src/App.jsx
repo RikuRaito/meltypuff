@@ -94,12 +94,6 @@ function App() {
         return <div className="page">カート (作成中)</div>
       default:
         return <Top /> 
-        return (
-          <div className="page">
-            <h1>Melty Puff</h1>
-            <p>ホームページ（作成中）</p>
-          </div>
-        )
     }
   }
 
