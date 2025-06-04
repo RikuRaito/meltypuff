@@ -8,11 +8,14 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout }) {
     // スクロール時のヘッダー背景変更
     useEffect(() => {
         const handleScroll = () => {
-            const scrollTop = window.pageYOffset
-            setIsScrolled(scrollTop > 50)
+            const hero = document.querySelector('.hero-section')
+            if (!hero) return
+            const heroBottom = hero.getBoundingClientRect().bottom
+            setIsScrolled(heroBottom <= 0)
         }
 
         window.addEventListener('scroll', handleScroll)
+        handleScroll()
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 

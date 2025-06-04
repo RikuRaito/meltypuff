@@ -1,37 +1,88 @@
+html, body {
+  margin:0;
+  padding: 0;
+}
+
 .top-container {
-  top: 0 !important;
-  left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  z-index: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
+  width: 100% ;
+  min-height: 100vh ;
+  z-index: 0 ;
+  margin: 0 ;
+  padding: 0 ;
+  position: relative;
 }
 
 .hero-section {
     width: 100%;
-    height: calc(100vh - 100px);
+    height: 100vh;
     overflow: hidden;
+    position: relative;
+    margin-top: -80px;
+    padding-top: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .background-video {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;    
+    top: 30px;
+    left: 0;
+    width: auto;
     height: 100%;
     object-fit: cover;
-    z-index: 1;
+    z-index: 10;
+    
+}
+
+.hero-content {
+  position: absolute;
+  top: 34%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  text-align: left;
+  color: white;
+  z-index: 20;
+}
+
+.hero-titles {
+  font-size: 80px;
+  line-height: 0.8;
+  margin: 0 0 20px;
+}
+
+.hero-titles span {
+  display: block;
+}
+
+.hero-button {
+  
+  top: 36%;
+  left: 24%;
+  margin-top: 20px;
+  padding: 18px 24px;
+  font-size: 24px;
+  color: white;
+  background: transparent;
+  border: 3px solid white;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.hero-button:hover {
+  background-color: white;
+  color: black;
 }
 
 /* main-contentの無効化 */
 .top-container .main-content {
-  margin-top: 0 !important;
-  padding: 0 !important;
-  display: block !important;
-  justify-content: unset !important;
-  align-items: unset !important;
+  margin-top: 0 ;
+  margin-bottom: 20px;
+  padding: 0 ;
+  display: block ;
+  justify-content: unset ;
+  align-items: unset ;
 }
 
 /* bodyのスクロール動作を確保 */
@@ -41,11 +92,18 @@ body:has(.top-container) {
 }
 
 .product-intro {
-  padding: 320px;
+  padding: 60px;
   background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 5px solid #ccc;
+  border-radius: 8px;
+  max-width: 900px;
+  margin: 40px auto;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
 .tabs {
@@ -110,6 +168,6 @@ body:has(.top-container) {
 }
 
 .product-button:hover {
-  background-color: #555;
+  background-color: #b43353;
 }
 
