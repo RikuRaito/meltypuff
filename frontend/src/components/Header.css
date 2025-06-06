@@ -56,6 +56,12 @@ header {
     padding: 0 20px;
 }
 
+header.home .nav-menu a,
+header.home .site-name,
+header.home .cart-icon {
+    color: #fff;
+}
+
 header.scrolled {
     background-color: transparent;
 }
@@ -79,7 +85,7 @@ header.scrolled .cart-icon {
 }
 
 .site-name {
-    color: #fff;
+    color: #000;
     font-size: clamp(1rem, 4vw, 1.4rem);
     margin-left: 10px;
     margin-top: 20px;
@@ -92,7 +98,7 @@ header.scrolled .cart-icon {
 }
 
 .nav-menu a {
-    color: #fff;
+    color: #000;
     text-decoration: none;
     font-size: 1.1em;
 }
@@ -104,7 +110,7 @@ header.scrolled .cart-icon {
 .cart-icon {
     width: 24px;
     height: 24px;
-    color: white;
+    color: #000;
     transition: color 0.3s;
 }
 

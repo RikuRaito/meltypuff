@@ -1,12 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './Header.css'
 
-function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout }) {
+function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage }) {
     const [isScrolled, setIsScrolled] = useState(false)
     const [showUserMenu, setShowUserMenu] = useState(false)
+    const location = useLocation();
+    const isRoot = currentPage === '/';
 
     // スクロール時のヘッダー背景変更
     useEffect(() => {
+    if(isRoot){
         const handleScroll = () => {
             const hero = document.querySelector('.hero-section')
             if (!hero) return
@@ -17,7 +21,10 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout }) {
         window.addEventListener('scroll', handleScroll)
         handleScroll()
         return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
+    } else {
+        setIsScrolled(false)
+    }
+    }, isRoot)
 
     // ページ遷移関数
     const handleNavigate = (path) => {
@@ -37,7 +44,7 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout }) {
     }
 
     return (
-        <header className={isScrolled ? 'scrolled' : ''}>
+        <header className={`${isRoot && !isScrolled ? 'home' : ''} ${isScrolled ? 'scrolled' : ''}`}>
             <div className="header-container">
                 <div className="logo">
                     <a href="/" className="logo-link" onClick={(e) => { e.preventDefault(); handleNavigate('/') }}>

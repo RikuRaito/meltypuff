@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
-//import './App.css'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Top from './pages/Top'
+import Support from './pages/Support'
 //import About from './pages/About'
 //import Login from './pages/Login'
 //import Account from './pages/Account'
-// import Contact from './pages/Contact' // 必要に応じて追加
+
 
 function App() {
   // 現在のページ状態
@@ -77,7 +79,7 @@ function App() {
       */
       
       case '/contact':
-        return <div className="page">Contact Page (作成中)</div>
+        return <Support />
       case '/privacy':
         return <div className="page">Privacy Policy (作成中)</div>
       case '/terms':
@@ -105,6 +107,7 @@ function App() {
         isLoggedIn={isLoggedIn}
         user={user}
         cartCount={cartCount}
+        currentPage={currentPage}
         // onLogout={handleLogout} // ← コメントアウト
       />
       

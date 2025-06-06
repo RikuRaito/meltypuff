@@ -1,0 +1,184 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+.support-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 20px;
+}
+
+.support-title {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.faq-overview {
+    font-size: 24px;
+    color: #b43353;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.faq-category-title {
+    font-size: 20px;
+    color: #b43353;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    border-left: 4px solid #b43353;
+    padding-left: 8px;
+}
+
+.faq-item { 
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: background-color 0.2s;
+}
+
+.faq-item:hover { 
+    background-color: #f9f9f9;
+}
+
+.faq-question {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    outline: none;
+}
+
+.faq-question .icon {
+    font-size: 20px;
+    color: #666;
+    transition: transform 0.2s;
+}
+
+/*回答が開いた状態ならアイコンを回転*/
+.faq-item.open .faq-question .icon {
+    transform: rotate(180deg);
+    color: #333;
+}
+
+.faq-answer {
+    padding: 0 20px 16px 20px;
+    display: none;
+    font-size: 15px;
+    color: #555;
+}
+
+.faq-item.open .faq-answer {
+    display: block;
+}
+
+/* ── レスポンシブ調整例 ── */
+@media (max-width: 600px) {
+  .support-container {
+    padding: 40px 16px;
+  }
+  .support-title {
+    font-size: 28px;
+  }
+  .faq-overview {
+    font-size: 20px;
+  }
+  .faq-category-title {
+    font-size: 18px;
+  }
+  .faq-question {
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+  .faq-answer {
+    padding: 12px 16px 12px 16px;
+    font-size: 14px;
+  }
+  .faq-item {
+    margin-bottom: 12px;
+  }
+}
+
+/*Contact Form*/
+.contact-form-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #b43353;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    border-left: 4px solid #b43353;
+    padding-left: 8px;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.contact-form input[type='email'],
+.contact-form textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.contact-form input[type='email']:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: #b43353;
+}
+
+.contact-form button[type='submit']{
+    align-self: flex-start;
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #b43353;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.contact-form button[type="submit"]:hover {
+  background-color: #900d37; /* もう少し濃い色に */
+}
+
+/* レスポンシブ調整 */
+@media (max-width: 600px) {
+  .contact-form input[type="email"],
+  .contact-form textarea {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .contact-form button[type="submit"] {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .contact-form-title {
+    font-size: 20px;
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+}
