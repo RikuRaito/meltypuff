@@ -7,7 +7,7 @@ import Top from './pages/Top'
 import Support from './pages/Support'
 import ShopNon from './pages/ShopNon'
 import ShopNic from './pages/ShopNic'
-//import Account from './pages/Account'
+import Login from './pages/Login'
 
 
 function App() {
@@ -69,33 +69,26 @@ function App() {
   // ページコンポーネントのレンダリング（未実装のページはコメントアウト）
   const renderPage = () => {
     switch(currentPage) {
-      /*
-      case '/about':
-        return <About />
-      case '/login':
-        return <Login onLogin={handleLogin} />
-      case '/account':
-        return <Account user={user} onLogout={handleLogout} />
-      */
-      
-      case '/contact':
-        return <Support />
-      case '/privacy':
-        return <div className="page">Privacy Policy (作成中)</div>
-      case '/terms':
-        return <div className="page">Terms of Service (作成中)</div>
-      case '/hyouki':
-        return <div className="page">特定商法に基づく表記 (作成中)</div>
-      case '/shop-non':
-        return <ShopNon />
-      case '/shop-nic':
-        return <ShopNic />
-      case '/articles':
-        return <div className="page">記事一覧 (作成中)</div>
-      case '/cart':
-        return <div className="page">カート (作成中)</div>
-      default:
-        return <Top /> 
+        case '/contact':
+            return <Support />
+        case '/privacy':
+            return <div className="page">Privacy Policy (作成中)</div>
+        case '/terms':
+            return <div className="page">Terms of Service (作成中)</div>
+        case '/hyouki':
+            return <div className="page">特定商法に基づく表記 (作成中)</div>
+        case '/shop-non':
+            return <ShopNon />
+        case '/shop-nic':
+            return <ShopNic />
+        case '/articles':
+            return <div className="page">記事一覧 (作成中)</div>
+        case '/login':
+            return <Login />
+        case '/cart':
+            return <div className="page">カート (作成中)</div>
+        default:
+            return <Top /> 
     }
   }
 

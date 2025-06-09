@@ -1,36 +1,36 @@
 import React, { useState } from 'react'
-import './ShopNon.css'
+import './ShopNic.css'
 
 const products = [
     {
         id: 11,
         name: 'Nasty 8.5K - パイナップルアイス',
         img: '/images/PineappleIce.jpg',
-        price: 2200,
+        price: 3980,
     },
     {
         id:12,
         name: 'Naty 8.5K - レッドエナジー',
         img: '/images/RedEnergy.jpg',
-        price: 2200
+        price: 3980
     },
     {
         id:13,
         name: 'Naty 8.5K - ミント',
         img: '/images/Spearmint.jpg',
-        price: 2200
+        price: 3980
     },
     {
         id: 14,
         name: 'Naty 8.5K - アロエグレープ',
         img: '/images/AloeGrape.jpg',
-        price: 2200
+        price: 3980
     },
     {
         id: 15,
         name: 'Naty 8.5K - スロウブロウ',
         img: '/images/SlowBlow.jpg',
-        price: 2200
+        price: 3980
     }
 ]
 
@@ -64,7 +64,7 @@ const ShopNon = () => {
     return (
         <div className="shopnic-container">
             <h1 className='shopnic-title'>商品一覧</h1>
-            <h2 className='shopnic-subtitle'>ノンニコチン</h2>
+            <h2 className='shopnic-subtitle'>ニコチン</h2>
             <div className='product-grid'>
                 {products.map((product) => (
                     <div className="product-card" key={product.id}>

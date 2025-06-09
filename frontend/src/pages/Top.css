@@ -106,12 +106,12 @@ body:has(.top-container) {
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-.tabs {
+.product-intro > .tabs {
   display: flex;
   border-bottom: 2px solid white;
 }
 
-.tab-button {
+.product-intro > .tabs > .tab-button {
   padding: 10px 20px;
   background: none;
   border: none;
@@ -121,42 +121,42 @@ body:has(.top-container) {
   outline: none;
 }
 
-.tab-button.active {
+.product-intro > .tabs > .tab-button.active {
   border-color: #333;
   font-weight: bold;
 }
 
-.tab-content {
+.product-intro > .tab-content {
   margin-top: 20px;
 }
 
-.tab-panel {
+.product-intro > .tab-content > .tab-panel {
   width: 100%;
   max-width: 800px;
 }
 
-.product-details {
+.product-intro > .tab-content > .tab-panel > .product-details {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 20px;
 }
 
-.product-image {
+.product-intro > .tab-content > .tab-panel > .product-details > .product-image {
   width: 50%;
   max-width: 350px;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.product-text {
+.product-intro > .tab-content > .tab-panel > .product-details > .product-text {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.product-button {
+.product-intro > .tab-content > .tab-panel > .product-details > .product-text > .product-button {
   margin-top: 12px;
   padding: 10px 16px;
   background-color: #333;
@@ -167,7 +167,12 @@ body:has(.top-container) {
   align-self: start;
 }
 
-.product-button:hover {
+.product-intro > .tab-content > .tab-panel > .product-details > .product-text > .product-button:hover {
   background-color: #b43353;
 }
 
+.product-intro > .tabs > .tab-button:hover {
+  background-color: #b43353;
+  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

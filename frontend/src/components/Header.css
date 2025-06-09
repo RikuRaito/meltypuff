@@ -129,9 +129,10 @@ header.scrolled .cart-icon {
     background-color: #b43353;
     color: white;
     border-radius: 50%;
+    padding: 0;
     padding: 2px 6px;
     font-size: 0.75rem;
-    min-width: 18px;
+    width: 18px;
     height: 18px;
     display: flex;
     align-items: center;

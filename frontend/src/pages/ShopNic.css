@@ -17,25 +17,25 @@ body {
   padding: 40px 20px;
 }
 
-.shopnic-title {
+.shopnic-container .shopnic-title {
   font-size: 2.5rem;
   margin-bottom: 0.5rem;
 }
 
-.shopnic-subtitle {
+.shopnic-container .shopnic-subtitle {
   font-size: 1.8rem;
   margin-bottom: 1.5rem;
 }
 
 /* 商品リスト (グリッドレイアウト) */
-.product-grid {
+.shopnic-container .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 24px;
 }
 
 /* 各商品カード */
-.product-card {
+.shopnic-container .product-card {
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -45,12 +45,13 @@ body {
 }
 
 /* 画像ラップ：アスペクト比を固定したい場合に使える */
-.product-image-wrap {
+.shopnic-container .product-image-wrap {
   width: 100%;
   padding-top: 100%; /* 正方形比率にしたいときは 100% */
   position: relative;
   overflow: hidden;
 }
+
 
 .shopnic-container .product-image {
   position: absolute;
@@ -62,24 +63,24 @@ body {
 }
 
 /* 情報部分 */
-.product-info {
+.shopnic-container .product-info {
   padding: 16px;
   flex-grow: 1; /* 後続の購入エリアが下に来るようにする */
 }
 
-.product-name {
+.shopnic-container .product-name {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
 
-.product-price {
+.shopnic-container .product-price {
   font-size: 1rem;
   font-weight: bold;
   color: #444;
 }
 
 /* 購入エリア (数量入力 + ボタン) */
-.product-purchase {
+.shopnic-container .product-purchase {
   display: flex;
   align-items: center;
   padding: 0 16px 16px;
@@ -87,7 +88,7 @@ body {
 }
 
 /* 数量入力 */
-.product-quantity {
+.shopnic-container .product-quantity {
   width: 60px;
   padding: 6px 8px;
   border: 1px solid #ccc;
@@ -97,7 +98,7 @@ body {
 }
 
 /* カートに追加ボタン */
-.add-to-cart-btn {
+.shopnic-container .add-to-cart-btn {
   flex-grow: 1;
   padding: 8px 12px;
   background-color: #d1505c;
@@ -109,13 +110,13 @@ body {
   transition: background-color 0.2s;
 }
 
-.add-to-cart-btn:hover {
+.shopnic-container .add-to-cart-btn:hover {
   background-color: #a33845;
 }
 
 /* レスポンシブ対応（小さめの画面ではカード幅を調整） */
 @media (max-width: 600px) {
-  .product-grid {
+  .shopnic-container .product-grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 16px;
   }
