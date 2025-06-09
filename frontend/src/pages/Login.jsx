@@ -9,6 +9,7 @@ const Login = () => {
         e.preventDefault();
         console.log(email,password)
     }
+    
   return (
     <div className="login-wrapper">
       <form className="login-container" onSubmit={handleSubmit}>

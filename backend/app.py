@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
+import json
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # 環境変数の読み込み
 load_dotenv()
@@ -12,12 +14,40 @@ app.config['JSON_AS_ASCII'] = False
 # CORS設定（React側からのアクセスを許可）
 CORS(app, origins=['http://localhost:3000'])
 
-# テスト用のデータ
-sample_data = [
-    {"id": 1, "name": "サンプル1", "description": "テストデータ1"},
-    {"id": 2, "name": "サンプル2", "description": "テストデータ2"},
-    {"id": 3, "name": "サンプル3", "description": "テストデータ3"}
-]
+Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
+
+class User:
+    def __init__(self, id, email, password_hash):
+        self.id = id
+        self.email = email
+        self.password_hash = password_hash
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data['id'], data['email'], data['password_hash'])
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'password_hash': self.password_hash
+        }
+
+def load_data():
+    if not os.path.exists(Data_file) or os.path.getsize(Data_file) == 0:
+        with open(Data_file, 'w', encoding='utf-8') as f:
+            json.dump({}, f, ensure_ascii=False, indent=2)
+    with open(Data_file, 'r', encoding='utf-8') as f:
+        raw = json.load(f)
+        # Convert each record into a User instance
+        return {email: User.from_dict(info) for email, info in raw.items()}
+
+def save_data(data):
+    # Convert User instances back to plain dicts
+    serializable = {email: user.to_dict() for email, user in data.items()}
+    with open(Data_file, 'w', encoding='utf-8') as f:
+        json.dump(serializable, f, ensure_ascii=False, indent=2)
+
 
 # ルートエンドポイント
 @app.route('/api/health', methods=['GET'])
@@ -27,23 +57,51 @@ def health_check():
 # データ取得エンドポイント
 @app.route('/api/data', methods=['GET'])
 def get_data():
-    return jsonify({"data": sample_data})
+    data = load_data()
+    return jsonify({'data':data})
 
 # データ作成エンドポイント
 @app.route('/api/data', methods=['POST'])
 def create_data():
+    data = load_data()
     new_item = request.get_json()
-    new_item['id'] = len(sample_data) + 1
-    sample_data.append(new_item)
+    new_item['id'] = max((i['id'] for i in data), default=0) + 1
+    data.append(new_item)
+    save_data(data)
     return jsonify({"message": "データが作成されました", "data": new_item}), 201
 
 # 特定データ取得エンドポイント
 @app.route('/api/data/<int:item_id>', methods=['GET'])
 def get_item(item_id):
-    item = next((item for item in sample_data if item['id'] == item_id), None)
-    if item:
-        return jsonify({"data": item})
-    return jsonify({"error": "データが見つかりません"}), 404
+    data = load_data()
+    item = next((i for i in data if i['id'] == item_id), None)
+    return (jsonify({"data": item}), 200) if item else (jsonify({"error": "データが見つかりません"}), 404)
+
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    load_data()
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    password_hash = generate_password_hash(password)
+
+    users = load_data()
+    if email in users:
+        return jsonify({
+            'status': 'Failed',
+            'message': 'Email already registered'
+        }), 400
+    new_id = len(users) + 1
+    # Create and store a new User instance
+    new_user = User(new_id, email, password_hash)
+    users[email] = new_user
+    save_data(users)
+    return jsonify({
+        'status': 'Success',
+        'message': 'Registered successfully',
+        'user': new_user.to_dict()
+    }), 201
+        
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

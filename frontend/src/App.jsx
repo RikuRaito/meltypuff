@@ -8,7 +8,8 @@ import Support from './pages/Support'
 import ShopNon from './pages/ShopNon'
 import ShopNic from './pages/ShopNic'
 import Login from './pages/Login'
-
+import Signup from './pages/Signup'
+import Hyoki from './components/Hyoki'
 
 function App() {
   // 現在のページ状態
@@ -76,7 +77,7 @@ function App() {
         case '/terms':
             return <div className="page">Terms of Service (作成中)</div>
         case '/hyouki':
-            return <div className="page">特定商法に基づく表記 (作成中)</div>
+            return <Hyoki />
         case '/shop-non':
             return <ShopNon />
         case '/shop-nic':
@@ -87,6 +88,8 @@ function App() {
             return <Login />
         case '/cart':
             return <div className="page">カート (作成中)</div>
+        case '/signup':
+            return <Signup />
         default:
             return <Top /> 
     }
