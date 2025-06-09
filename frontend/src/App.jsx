@@ -5,8 +5,8 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import Top from './pages/Top'
 import Support from './pages/Support'
-//import About from './pages/About'
-//import Login from './pages/Login'
+import ShopNon from './pages/ShopNon'
+import ShopNic from './pages/ShopNic'
 //import Account from './pages/Account'
 
 
@@ -87,9 +87,9 @@ function App() {
       case '/hyouki':
         return <div className="page">特定商法に基づく表記 (作成中)</div>
       case '/shop-non':
-        return <div className="page">ノンニコチン商品 (作成中)</div>
+        return <ShopNon />
       case '/shop-nic':
-        return <div className="page">ニコチンベイプ (作成中)</div>
+        return <ShopNic />
       case '/articles':
         return <div className="page">記事一覧 (作成中)</div>
       case '/cart':
