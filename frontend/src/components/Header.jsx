@@ -24,7 +24,7 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
     } else {
         setIsScrolled(false)
     }
-    }, isRoot)
+    }, [isRoot])
 
     // ページ遷移関数
     const handleNavigate = (path) => {
