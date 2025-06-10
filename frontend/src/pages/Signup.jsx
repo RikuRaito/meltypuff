@@ -9,15 +9,43 @@ const Signup = () => {
     const [confirm, setConfirm] = useState('')
 
     // フォーム送信ハンドラー
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault()
-      // TODO: サインアップAPI呼び出し
+      if (password !== confirm) {
+        alert("パスワードが一致しません")
+      }
       console.log({ email, password, confirm })
-      // フォームクリア
-      setEmail('')
-      setPassword('')
-      setConfirm('')
-    }
+
+      try{ 
+        const res = await fetch('/api/signup', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password
+          }),
+        });
+        if (!res.ok) {
+          const errorData = await res.json()
+          console.error("登録エラー",errorData);
+          alert(erroData.message || "サインアップに失敗しました")
+          return;
+        }
+        const data = await res.json();
+        console.log("登録成功", data);
+        alert("登録完了")
+
+        // フォームクリア
+        setEmail('')
+        setPassword('')
+        setConfirm('')
+      } catch (err) {
+        console.log("通信エラー",err);
+        alert("通信エラー")
+      }
+    };
 
     return (
       <div className="signup-wrapper">

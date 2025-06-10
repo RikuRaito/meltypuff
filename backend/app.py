@@ -32,6 +32,8 @@ class User:
             'email': self.email,
             'password_hash': self.password_hash
         }
+    def auth(self,password):
+        return check_password_hash(self.password_hash, password)
 
 def load_data():
     if not os.path.exists(Data_file) or os.path.getsize(Data_file) == 0:
@@ -101,7 +103,53 @@ def signup():
         'message': 'Registered successfully',
         'user': new_user.to_dict()
     }), 201
-        
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    users = load_data()
+    data = request.get_json() or {}
+    email = data.get('email')
+    password = data.get('password')
+    user = users.get(email)
+
+    if not user:
+        return jsonify ({
+            'Status': 'Failed',
+            'message': 'User not found'
+        }),404
+
+    if user.auth(password):
+        return jsonify ({
+            'status': 'Succes',
+            'message': 'Login Successfully'
+        })
+    else:
+        return jsonify ({
+            'status': 'Fail',
+            'message': 'Incorrect'
+        })
+    
+@app.route('/api/update_password')
+def update_password():
+    users = load_data()
+    data = request.get_json() or {}
+    email = data.get('email')
+    new_password = data.get('new_password')
+    user = users[email]
+
+    if not users[email]:
+        return jsonify ({
+            'status': 'Failed',
+            'message': 'User not found'
+        }),404
+    
+    new_hash = generate_password_hash(new_password)
+    user.password_hash = new_hash
+    save_data(users)
+    return jsonify ({
+        'status': 'Success',
+        'message': 'Password updated'
+    }), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

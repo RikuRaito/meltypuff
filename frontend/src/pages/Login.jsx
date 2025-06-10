@@ -8,7 +8,31 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(email,password)
-    }
+        try {
+          const res = await fetch('/api/login', {
+            method:'POST',
+            headers:{
+              "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({
+              email,
+              password
+            }),
+          });
+          if (!res.ok){
+            const errorData =  await res.json()
+            console.log('ログインエラー', errorData)
+            alert('ログインに失敗しました')
+            return;
+          }
+          const data = await res.json();
+          console.log('ログイン成功', data)
+          
+        } catch(err){
+          console.log('通信エラー',err)
+          alert('通信エラー')
+        }
+    };
     
   return (
     <div className="login-wrapper">
