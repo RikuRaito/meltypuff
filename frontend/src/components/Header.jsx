@@ -40,6 +40,8 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
         if (onLogout) {
             onLogout()
         }
+        localStorage.setItem('isLoggedIn','false');
+        
         setShowUserMenu(false)
     }
 

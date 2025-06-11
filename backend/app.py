@@ -14,7 +14,7 @@ app.config['JSON_AS_ASCII'] = False
 # CORS設定（React側からのアクセスを許可）
 CORS(app, origins=['http://localhost:3000'])
 
-Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
+user_Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
 
 class User:
     def __init__(self, id, email, password_hash):
@@ -36,10 +36,10 @@ class User:
         return check_password_hash(self.password_hash, password)
 
 def load_data():
-    if not os.path.exists(Data_file) or os.path.getsize(Data_file) == 0:
-        with open(Data_file, 'w', encoding='utf-8') as f:
+    if not os.path.exists(user_Data_file) or os.path.getsize(user_Data_file) == 0:
+        with open(user_Data_file, 'w', encoding='utf-8') as f:
             json.dump({}, f, ensure_ascii=False, indent=2)
-    with open(Data_file, 'r', encoding='utf-8') as f:
+    with open(user_Data_file, 'r', encoding='utf-8') as f:
         raw = json.load(f)
         # Convert each record into a User instance
         return {email: User.from_dict(info) for email, info in raw.items()}
@@ -47,7 +47,7 @@ def load_data():
 def save_data(data):
     # Convert User instances back to plain dicts
     serializable = {email: user.to_dict() for email, user in data.items()}
-    with open(Data_file, 'w', encoding='utf-8') as f:
+    with open(user_Data_file, 'w', encoding='utf-8') as f:
         json.dump(serializable, f, ensure_ascii=False, indent=2)
 
 

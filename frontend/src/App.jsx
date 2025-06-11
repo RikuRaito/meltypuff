@@ -26,9 +26,10 @@ function App() {
   useEffect(() => {
     const path = window.location.pathname
     setCurrentPage(path)
+
+    const loggedInFlag = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedInFlag)
     
-    // ローカルストレージまたはトークンからログイン状態を復元
-    // checkLoginStatus() // ← 一時的にコメントアウト（バックエンドがないため）
   }, [])
 
 
@@ -85,7 +86,7 @@ function App() {
         case '/articles':
             return <div className="page">記事一覧 (作成中)</div>
         case '/login':
-            return <Login />
+            return <Login navigateTo={navigateTo}/>
         case '/cart':
             return <div className="page">カート (作成中)</div>
         case '/signup':
