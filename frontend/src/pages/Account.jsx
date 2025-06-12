@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import './Account.css'
 
-const Account = () => {
+const Account = ({ user, onLogout }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [error, setError]       = useState(null);
+  const [phone, setPhone] = useState();
   const [address_num, setAddress_num] = useState('');
   const [address_1, setAddress_1] = useState('');
   const [address_2, setAddress_2] = useState('');
@@ -26,6 +27,7 @@ const Account = () => {
       })
       .then(data => {
         setUserInfo(data);
+        setPhone(data.phone || '');
         setAddress_num(data.address_num || '');
         setAddress_1(data.address_1 || '');
         setAddress_2(data.address_2 || '');
@@ -46,6 +48,7 @@ const Account = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
+          phone,
           address_num,
           address_1,
           address_2
@@ -68,29 +71,41 @@ const Account = () => {
     <div className="account-container">
       <h2>マイアカウント情報</h2>
       <p><strong>ID:</strong> {userInfo.id}</p>
-      <p><strong>メール:</strong> {userInfo.email}</p>
+      <p><strong>メールアドレス:</strong> {userInfo.email}</p>
       <div className="account-field">
-        <label>郵便番号:</label>
+        <label className="phone-number">電話番号:</label>
+        <input
+            type="phone"
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+            placeholder="例: 090-1234-5678"
+        />
+      </div>
+      <div className="account-field">
+        <label className="post-code">郵便番号:</label>
         <input
           type="text"
           value={address_num}
           onChange={e => setAddress_num(e.target.value)}
+          placeholder="123-4567"
         />
       </div>
       <div className="account-field">
-        <label>住所1:</label>
+        <label className="address_1">住所1:</label>
         <input
           type="text"
           value={address_1}
           onChange={e => setAddress_1(e.target.value)}
+          placeholder="例: 東京都千代田区"
         />
       </div>
       <div className="account-field">
-        <label>住所2:</label>
+        <label className="address_2">住所2:</label>
         <input
           type="text"
           value={address_2}
           onChange={e => setAddress_2(e.target.value)}
+          placeholder="例: 1-1-1"
         />
       </div>
       <button
@@ -99,6 +114,10 @@ const Account = () => {
       >
         更新する
       </button>
+      <button
+        className="account-logout-button"
+        onClick={() => onLogout()}
+        >ログアウト</button>
     </div>
   );
 }

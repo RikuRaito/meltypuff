@@ -15,11 +15,13 @@ app.config['JSON_AS_ASCII'] = False
 CORS(app, origins=['http://localhost:3000'])
 
 user_Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
+product_data_file = os.path.join(os.path.dirname(__file__), 'productDatabase.json')
 
 class User:
-    def __init__(self, id, email, password_hash,address_num,address_1,address_2):
+    def __init__(self, id, email,phone_number, password_hash,address_num,address_1,address_2):
         self.id = id
         self.email = email
+        self.phone_number = phone_number
         self.password_hash = password_hash
         self.address_num = address_num
         self.address_1 = address_1
@@ -30,6 +32,7 @@ class User:
         return cls(
             data['id'],
             data['email'],
+            data.get('phone_number'),
             data['password_hash'],
             data.get('address_num'),
             data.get('address_1'),
@@ -42,6 +45,8 @@ class User:
             'email': self.email,
             'password_hash': self.password_hash
         }
+        if self.phone_number is not None:
+            d['phone_number'] = self.phone_number
         if self.address_num is not None:
             d['address_num'] = self.address_num
         if self.address_1 is not None:
@@ -53,6 +58,13 @@ class User:
     def auth(self,password):
         return check_password_hash(self.password_hash, password)
     
+
+class Product:
+    def __init__(self, id, price, name):
+        self.id = id
+        self.price = price
+        self.name = name
+
 
 def load_data():
     if not os.path.exists(user_Data_file) or os.path.getsize(user_Data_file) == 0:
@@ -69,6 +81,18 @@ def save_data(data):
     with open(user_Data_file, 'w', encoding='utf-8') as f:
         json.dump(serializable, f, ensure_ascii=False, indent=2)
 
+def load_products():
+    product_data_file = Product.product_data_file
+    if not os.path.exists(product_data_file):
+        raise FileNotFoundError(f"Product database not found: {product_data_file}")
+        
+    with open(product_data_file, 'r', encoding='utf-8') as f:
+        product_list = json.load(f)
+    
+    return [
+        Product(item['id'], item['price'], item.get['name', ''])
+        for item in product_list
+    ]
 
 # ルートエンドポイント
 @app.route('/api/health', methods=['GET'])
@@ -114,7 +138,7 @@ def signup():
         }), 400
     new_id = len(users) + 1
     # Create and store a new User instance
-    new_user = User(new_id, email, password_hash,"","","")
+    new_user = User(new_id, email, "", password_hash, "", "", "")
     users[email] = new_user
     save_data(users)
     return jsonify({
@@ -185,6 +209,7 @@ def account_info():
         'status': 'Success',
         'email': email,
         'id': user.id,
+        'phone_number': user.phone_number,
         'address_num': user.address_num,
         'address_1': user.address_1,
         'address_2': user.address_2
@@ -202,6 +227,7 @@ def account_update():
         }),404
     
     user = users[email]
+    user.phone_number = data.get('phone_number')
     user.address_num = data.get('address_num')
     user.address_1 = data.get('address_1')
     user.address_2 = data.get('address_2')

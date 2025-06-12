@@ -31,12 +31,12 @@ function App() {
     navigateTo('/')
   }
 
-  const handleLogout = (userData) => {
-    setIsLoggedIn(false)
-    setUser(none)
-    localStorage.setItem('isloggedIn', 'false')
-    localStorage.setItem('user', none)
-    navigateTo('/')
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    localStorage.setItem('isLoggedIn', 'false');
+    localStorage.setItem('user', '');
+    navigateTo('/');
   }
 
   // 初期化：ページとログイン状態を確認
@@ -111,7 +111,7 @@ function App() {
         case '/login':
             return <Login navigateTo={navigateTo} onLogin={handleLogin}/>
         case '/account':
-          return <Account user={user} />
+          return <Account user={user} onLogout={handleLogout}/>
         case '/cart':
             return <div className="page">カート (作成中)</div>
         case '/signup':

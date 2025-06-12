@@ -4,7 +4,7 @@ import './ShopNon.css'
 const products = [
     {
         id: 1,
-        name: 'Lost Mary - ブルーベリーラズベリー',
+        name: 'Lost Mary - ブルーベリーラズベリ',
         img: '/images/lm_blueberry.jpg',
         price: 2200,
     },

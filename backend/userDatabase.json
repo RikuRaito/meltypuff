@@ -1,10 +1,10 @@
 {
-  "sa@sa": {
+  "ss@ss": {
     "id": 1,
-    "email": "sa@sa",
-    "password_hash": "scrypt:32768:8:1$nnGIJL1E1Vwkbbyu$f7b406e31b63b9f836990279f519012ddefd6669130cd0ec76851f3d0180b887c9423a44e660827fdad8eb7ac4506408bf8b57b8d5b807beb037e2be11d2ea5d",
-    "address_num": "9100855",
+    "email": "ss@ss",
+    "password_hash": "scrypt:32768:8:1$lGRRBSnFGXo8xTdx$c5de8dc1958dc7165e874d11c8b1f42c24822f866877cce9782e481195a2dd8393b76383a40d53b400a100a85132e15dc70028ed8f8b01d1d4aff2bb92e92b69",
+    "address_num": "910-0855",
     "address_1": "福井県福井市西方",
-    "address_2": "2−13−15"
+    "address_2": "2-13-15"
   }
 }
