@@ -10,6 +10,7 @@ import ShopNic from './pages/ShopNic'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Hyoki from './components/Hyoki'
+import Account from './pages/Account'
 
 function App() {
   // 現在のページ状態
@@ -29,6 +30,15 @@ function App() {
     localStorage.setItem('user', JSON.stringify(userData))
     navigateTo('/')
   }
+
+  const handleLogout = (userData) => {
+    setIsLoggedIn(false)
+    setUser(none)
+    localStorage.setItem('isloggedIn', 'false')
+    localStorage.setItem('user', none)
+    navigateTo('/')
+  }
+
   // 初期化：ページとログイン状態を確認
   useEffect(() => {
     const path = window.location.pathname
@@ -38,6 +48,12 @@ function App() {
     setIsLoggedIn(loggedInFlag)
     
   }, [])
+
+  // currentPage が変わるたびに localStorage のログイン状態を再検証
+  useEffect(() => {
+    const stored = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(stored);
+  }, [currentPage]);
 
 
   // ページ遷移関数（認証チェック付き）
@@ -94,6 +110,8 @@ function App() {
             return <div className="page">記事一覧 (作成中)</div>
         case '/login':
             return <Login navigateTo={navigateTo} onLogin={handleLogin}/>
+        case '/account':
+          return <Account user={user} />
         case '/cart':
             return <div className="page">カート (作成中)</div>
         case '/signup':
@@ -112,7 +130,6 @@ function App() {
         user={user}
         cartCount={cartCount}
         currentPage={currentPage}
-        // onLogout={handleLogout} // ← コメントアウト
       />
       
       <main className="main-content">

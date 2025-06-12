@@ -17,23 +17,42 @@ CORS(app, origins=['http://localhost:3000'])
 user_Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
 
 class User:
-    def __init__(self, id, email, password_hash):
+    def __init__(self, id, email, password_hash,address_num,address_1,address_2):
         self.id = id
         self.email = email
         self.password_hash = password_hash
+        self.address_num = address_num
+        self.address_1 = address_1
+        self.address_2 = address_2
 
     @classmethod
     def from_dict(cls, data):
-        return cls(data['id'], data['email'], data['password_hash'])
+        return cls(
+            data['id'],
+            data['email'],
+            data['password_hash'],
+            data.get('address_num'),
+            data.get('address_1'),
+            data.get('address_2')
+            )
 
     def to_dict(self):
-        return {
+        d = {
             'id': self.id,
             'email': self.email,
             'password_hash': self.password_hash
         }
+        if self.address_num is not None:
+            d['address_num'] = self.address_num
+        if self.address_1 is not None:
+            d['address_1'] = self.address_1
+        if self.address_2 is not None:
+            d['address_2'] = self.address_2
+        return d
+    
     def auth(self,password):
         return check_password_hash(self.password_hash, password)
+    
 
 def load_data():
     if not os.path.exists(user_Data_file) or os.path.getsize(user_Data_file) == 0:
@@ -95,7 +114,7 @@ def signup():
         }), 400
     new_id = len(users) + 1
     # Create and store a new User instance
-    new_user = User(new_id, email, password_hash)
+    new_user = User(new_id, email, password_hash,"","","")
     users[email] = new_user
     save_data(users)
     return jsonify({
@@ -120,12 +139,12 @@ def login():
 
     if user.auth(password):
         return jsonify ({
-            'status': 'Succes',
+            'status': 'Success',
             'message': 'Login Successfully'
         })
     else:
         return jsonify ({
-            'status': 'Fail',
+            'status': 'Failed',
             'message': 'Incorrect'
         })
     
@@ -150,6 +169,52 @@ def update_password():
         'status': 'Success',
         'message': 'Password updated'
     }), 200
+
+@app.route('/api/account', methods=['GET'])
+def account_info():
+    users = load_data()
+    email = request.args.get('email')
+    user= users.get(email)
+    if not user:
+        return jsonify ({
+            'status': 'Failed',
+            'message': 'User not found'
+        }), 404
+
+    return jsonify ({
+        'status': 'Success',
+        'email': email,
+        'id': user.id,
+        'address_num': user.address_num,
+        'address_1': user.address_1,
+        'address_2': user.address_2
+    })
+
+@app.route('/api/account_update', methods=['POST'])
+def account_update():
+    users = load_data()
+    data = request.get_json()
+    email = data.get('email')
+    if not email or email not in users:
+        return jsonify ({
+            'status': 'Failed',
+            'message': 'User not found'
+        }),404
+    
+    user = users[email]
+    user.address_num = data.get('address_num')
+    user.address_1 = data.get('address_1')
+    user.address_2 = data.get('address_2')
+
+    save_data(users)
+    return jsonify ({
+        'status': 'Success',
+        'email': user.email,
+        'id': user.id,
+        'address_num': user.address_num,
+        'address_1': user.address_1,
+        'address_2': user.address_2
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

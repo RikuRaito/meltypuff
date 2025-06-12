@@ -1,12 +1,10 @@
 {
-  "sairikuneont@gmail.com": {
+  "sa@sa": {
     "id": 1,
-    "email": "sairikuneont@gmail.com",
-    "password_hash": "scrypt:32768:8:1$rbMIUQSqKwtL7Lfh$458fe34111c2962d0632eeb2a217a54323b6758946d5cacd8fd74eeb49de7869e61fa4c7a3e7ab9d1d1b34da3328458a08b50ed65109e818c9288d0eef1a33bb"
-  },
-  "sa@fda": {
-    "id": 2,
-    "email": "sa@fda",
-    "password_hash": "scrypt:32768:8:1$RNn8IVsTcXv45vhV$3f0c3c711746fe0d4e8712b8fc552ffb26e710260f16a5333322bec66bd8ee35ee31bb258a2b67012d1e9fa455967898621c336ae94258e548cb4596d6d65bbe"
+    "email": "sa@sa",
+    "password_hash": "scrypt:32768:8:1$nnGIJL1E1Vwkbbyu$f7b406e31b63b9f836990279f519012ddefd6669130cd0ec76851f3d0180b887c9423a44e660827fdad8eb7ac4506408bf8b57b8d5b807beb037e2be11d2ea5d",
+    "address_num": "9100855",
+    "address_1": "福井県福井市西方",
+    "address_2": "2−13−15"
   }
 }

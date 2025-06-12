@@ -133,16 +133,6 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
                                     >
                                         注文履歴
                                     </a>
-                                    <a 
-                                        href="#"
-                                        onClick={(e) => { 
-                                            e.preventDefault(); 
-                                            handleLogout();
-                                        }}
-                                        className="logout-link"
-                                    >
-                                        ログアウト
-                                    </a>
                                 </div>
                             )}
                         </div>

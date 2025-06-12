@@ -13,6 +13,7 @@ const Signup = () => {
       e.preventDefault()
       if (password !== confirm) {
         alert("パスワードが一致しません")
+        return
       }
       console.log({ email, password, confirm })
 

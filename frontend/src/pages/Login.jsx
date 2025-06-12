@@ -25,13 +25,22 @@ const Login = ({navigateTo, onLogin}) => {
             alert('ログインに失敗しました')
             return;
           }
+
           const data = await res.json();
+          if (data.status === 'Success'){
           console.log('ログイン成功', data)
           localStorage.setItem('isLoggedIn', 'true')
+          localStorage.setItem('email', email)
           if(onLogin){
             onLogin(data.user || {});
           }
           navigateTo('/')
+          }
+          else if(data.status === 'Failed'){
+            alert('メールアドレスまたはパスワードが間違っています')
+            return
+          }
+
         } catch(err){
           console.log('通信エラー',err)
           alert('通信エラー')
