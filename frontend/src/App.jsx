@@ -22,6 +22,13 @@ function App() {
   // カート状態管理
   const [cartCount, setCartCount] = useState(0)
 
+  const handleLogin = (userData) => {
+    setIsLoggedIn(true)
+    setUser(userData)
+    localStorage.setItem('isLoggedIn', 'true')
+    localStorage.setItem('user', JSON.stringify(userData))
+    navigateTo('/')
+  }
   // 初期化：ページとログイン状態を確認
   useEffect(() => {
     const path = window.location.pathname
@@ -86,7 +93,7 @@ function App() {
         case '/articles':
             return <div className="page">記事一覧 (作成中)</div>
         case '/login':
-            return <Login navigateTo={navigateTo}/>
+            return <Login navigateTo={navigateTo} onLogin={handleLogin}/>
         case '/cart':
             return <div className="page">カート (作成中)</div>
         case '/signup':

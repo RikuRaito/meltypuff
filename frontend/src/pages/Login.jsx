@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import './Login.css'
 
-const Login = ({navigateTo}) => {
+const Login = ({navigateTo, onLogin}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -28,6 +28,9 @@ const Login = ({navigateTo}) => {
           const data = await res.json();
           console.log('ログイン成功', data)
           localStorage.setItem('isLoggedIn', 'true')
+          if(onLogin){
+            onLogin(data.user || {});
+          }
           navigateTo('/')
         } catch(err){
           console.log('通信エラー',err)
