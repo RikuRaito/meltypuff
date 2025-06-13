@@ -63,9 +63,18 @@ const ShopNon = () => {
     //dammy handler when add to cart button is pushed
     const handleAddToCart = (productId) => {
         const qty = quantities[productId]
-        console.log(`商品ID: ${productId}を${qty}個をカートに追加しました`)
-        //put function to handle
-    }
+        const isLoggedIn = localStorage.getItem('isLoggedIn' === 'true');
+
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existingItem = cart.find(item => item.id === productId);
+        console.log(`${productId}をカートに追加しました`)
+        if (existingItem) {
+            existingItem.qty += qty;
+        } else {
+            cart.push({ id: productId, qty});
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+    };
 
     return (
         <div className="shopnon-container">

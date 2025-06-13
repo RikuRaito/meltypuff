@@ -5,6 +5,7 @@ import './Header.css'
 function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage }) {
     const [isScrolled, setIsScrolled] = useState(false)
     const [showUserMenu, setShowUserMenu] = useState(false)
+    const [localCartCount, setLocalCartCount] = useState(0)
     const location = useLocation();
     const isRoot = currentPage === '/';
 
@@ -35,15 +36,17 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
         }
     }
 
-    // ログアウト処理
-    const handleLogout = () => {
-        if (onLogout) {
-            onLogout()
-        }
-        localStorage.setItem('isLoggedIn','false');
-        handleNavigate('/')
-        setShowUserMenu(false)
-    }
+    useEffect(() => {
+        const updateCartCount = () => {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            setLocalCartCount(count);
+        };
+        updateCartCount();
+        window.addEventListener('storage', updateCartCount);
+        return () => removeEventListener('storage', updateCartCount);
+    })
+
 
     return (
         <header className={`${isRoot && !isScrolled ? 'home' : ''} ${isScrolled ? 'scrolled' : ''}`}>
@@ -164,7 +167,7 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
                                 strokeLinejoin="round" 
                                 d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                         </svg>   
-                        <span className="cart-count">{cartCount || 0}</span>                   
+                        <span className="cart-count">{localCartCount}</span>                   
                     </a>
                 </nav>
             </div>
