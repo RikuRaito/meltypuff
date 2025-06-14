@@ -60,10 +60,11 @@ class User:
     
 
 class Product:
-    def __init__(self, id, price, name):
+    def __init__(self, id, price, name, displayname):
         self.id = id
         self.price = price
         self.name = name
+        self.displayname = displayname
 
 
 def load_data():
@@ -82,15 +83,12 @@ def save_data(data):
         json.dump(serializable, f, ensure_ascii=False, indent=2)
 
 def load_products():
-    product_data_file = Product.product_data_file
     if not os.path.exists(product_data_file):
         raise FileNotFoundError(f"Product database not found: {product_data_file}")
-        
     with open(product_data_file, 'r', encoding='utf-8') as f:
         product_list = json.load(f)
-    
     return [
-        Product(item['id'], item['price'], item.get['name', ''])
+        Product(item['id'], item['price'], item.get('name', ''), item.get('displayname', ''))
         for item in product_list
     ]
 
@@ -242,7 +240,30 @@ def account_update():
         'address_2': user.address_2
     })
 
+@app.route('/api/products',methods=['GET'])
+def products_info():
+    products = load_products()
 
+    result = [{'id': p.id, 'price': p.price, 'name': p.displayname} for p in products]
+    return jsonify (result)
+
+@app.route('/api/calc_amount', methods=['POST'])
+def calc_amount():
+    products = load_products()
+    product_map = {p.id: p for p in products}
+
+    data = request.get_json() or {}
+    items = data.get('items', [])
+    total_amount = 0
+
+    for item in items:
+        prod_id = item.get('id')
+        qty = item.get('qty', 1)
+        product = product_map.get(prod_id)
+        if product:
+            total_amount += product.price * qty
+
+    return jsonify({'amount': total_amount})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

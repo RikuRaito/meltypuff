@@ -11,6 +11,7 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Hyoki from './components/Hyoki'
 import Account from './pages/Account'
+import Cart from './pages/Cart'
 
 function App() {
   // 現在のページ状態
@@ -95,27 +96,27 @@ function App() {
   const renderPage = () => {
     switch(currentPage) {
         case '/contact':
-            return <Support />
+          return <Support />
         case '/privacy':
-            return <div className="page">Privacy Policy (作成中)</div>
+          return <div className="page">Privacy Policy (作成中)</div>
         case '/terms':
-            return <div className="page">Terms of Service (作成中)</div>
+          return <div className="page">Terms of Service (作成中)</div>
         case '/hyouki':
-            return <Hyoki />
+          return <Hyoki />
         case '/shop-non':
-            return <ShopNon />
+          return <ShopNon />
         case '/shop-nic':
-            return <ShopNic />
+          return <ShopNic />
         case '/articles':
-            return <div className="page">記事一覧 (作成中)</div>
+          return <div className="page">記事一覧 (作成中)</div>
         case '/login':
-            return <Login navigateTo={navigateTo} onLogin={handleLogin}/>
+          return <Login navigateTo={navigateTo} onLogin={handleLogin}/>
         case '/account':
           return <Account user={user} onLogout={handleLogout}/>
         case '/cart':
-            return <div className="page">カート (作成中)</div>
+          return <Cart />
         case '/signup':
-            return <Signup />
+          return <Signup />
         default:
             return <Top /> 
     }
@@ -136,7 +137,7 @@ function App() {
         {renderPage()}
       </main>
       
-      <Footer navigateTo={navigateTo} />
+      {currentPage !== '/cart' && <Footer navigateTo={navigateTo} />}
     </div>
   )
 }
