@@ -19,6 +19,7 @@ const Cart = () => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [serverTotal, setServerTotal] = useState(0);
+  const [isOnlyNon, setIsOnlyNon] = useState(false);
 
   // 全商品情報を取得
   useEffect(() => {
@@ -54,6 +55,9 @@ const Cart = () => {
         .then(data => {
             console.log('Calculated Amount:', data.amount);
             setServerTotal(data.amount);
+            if (data.shipping_fee > 0) {
+                setIsOnlyNon(true);
+            }
         })
         .catch(err => {
             console.log('Failed to get amount from server',err)
@@ -112,7 +116,11 @@ const Cart = () => {
           </React.Fragment>
         );
       })}
+      {isOnlyNon && (
+        <div className='shipping'>ノンニコチンベイプ送料: ¥250</div>
+      )}
       <footer className="cart-footer">
+        
         <div className="total">合計: ¥{serverTotal.toLocaleString()}</div>
         <button className="checkout-button">支払う</button>
       </footer>

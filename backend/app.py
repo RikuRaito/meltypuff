@@ -262,8 +262,21 @@ def calc_amount():
         product = product_map.get(prod_id)
         if product:
             total_amount += product.price * qty
+    
+    shipping_fee = 0
 
-    return jsonify({'amount': total_amount})
+    for item in items:
+        prod_id = item.get('id')
+        if 1 <= prod_id <= 6:
+            shipping_fee = 250
+            break
+
+    total_amount += shipping_fee
+    
+    return jsonify({
+        'amount': total_amount,
+        'shipping_fee': shipping_fee
+        })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
