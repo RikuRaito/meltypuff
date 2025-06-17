@@ -1,3 +1,7 @@
+/* Hide hamburger on desktop */
+.hamburger {
+  display: none;
+}
 /* 既存のCSSを活用 + 必要な追加スタイル */
 
 .dropdown {
@@ -9,25 +13,32 @@
     position: absolute;
     top: 100%;
     left: 0;
-    background: white;
-    min-width: 160px;
+    background: transparent;
+    min-width: 120px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     z-index: 10;
     border-radius: 0 0 10px 10px;
-    padding: 10px 0;
+    padding: 5px 0;
 }
 
-.dropdown:hover .dropdown-menu {
-    display: block;
+
+/* Hide shop menu by default */
+.nav-item.dropdown .dropdown-menu {
+  display: none;
+}
+/* Show when toggled open */
+.nav-item.dropdown.open .dropdown-menu {
+  display: block;
 }
 
 .dropdown-menu a {
     display: block;
-    padding: 10px 20px;
+    padding: 6px 10px;
     color: black !important;
     text-decoration: none;
     font-size: 1em;
     white-space: nowrap;
+    border-radius: 8px;
 }
 
 .dropdown-menu a:hover {
@@ -163,5 +174,66 @@ header.scrolled .cart-icon {
     
     .site-name {
         font-size: 1.2rem;
+    }
+}
+
+/* Removed .hamburger .bar styles since they're no longer used */
+
+/* Optional styling for the new SVG icon inside hamburger button */
+
+.hamburger .hamburger-icon {
+  width: 24px;
+  height: 24px;
+  color: currentColor;
+}
+
+@media(max-width: 600px){
+    .hamburger {
+        display: block;
+        margin-left: auto;
+    }
+
+    .nav-menu {
+        display:none;
+        flex-direction: column;
+        gap: 10px;
+        background: white;
+        position: absolute;
+        top: 80px;
+        right: 20px;
+        padding: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        z-index: 5;
+        border-radius: 8px;
+    }
+
+    .nav-menu.open {
+        display: flex;
+        color: black;
+        border-radius: 8px;
+    }
+
+    /* Ensure mobile menu links are black */
+    .nav-menu.open a {
+      color: black !important;
+    }
+
+    .nav-menu.open:hover {
+      color: #b43353;
+    }
+    /* Space between hamburger and cart icon */
+    .cart-button {
+      margin-left: 8px;
+    }
+
+    /* Position the SHOP dropdown to the left of the toggle on mobile */
+    .nav-item.dropdown .dropdown-menu {
+      top: 100%;
+      right: 0;           /* align right edge of menu with the toggle button */
+      left: auto;         /* unset any left positioning */
+      transform: translateX(-50%); /* shift menu fully to left of toggle */
+      margin-top:   6px;
+      margin-right: 5px;
+      border-radius: 8px;
     }
 }
