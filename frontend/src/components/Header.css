@@ -1,6 +1,11 @@
 /* Hide hamburger on desktop */
 .hamburger {
   display: none;
+  background: transparent;
+  padding: 8;
+  color: black;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 /* 既存のCSSを活用 + 必要な追加スタイル */
 
@@ -15,7 +20,7 @@
     left: 0;
     background: transparent;
     min-width: 120px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     z-index: 10;
     border-radius: 0 0 10px 10px;
     padding: 5px 0;
@@ -34,7 +39,7 @@
 .dropdown-menu a {
     display: block;
     padding: 6px 10px;
-    color: black !important;
+    color: white ;
     text-decoration: none;
     font-size: 1em;
     white-space: nowrap;
@@ -49,13 +54,14 @@
 /* ヘッダー */
 header {
     background-color: transparent;
-    padding-left: 0 20px;
+    padding: 12px 20px;
     position: fixed;
     z-index: 2;
     top: 0;
     left: 0;
     width: 100%;
     height: 80px;
+    box-sizing: border-box;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -83,6 +89,10 @@ header.scrolled .cart-icon {
     color: black;
 }
 
+/* Nudge logo and site name slightly upward for alignment */
+.logo {
+  transform: translateY(-2px);
+}
 .logo-link {
     display: flex;
     align-items: center;
@@ -91,21 +101,23 @@ header.scrolled .cart-icon {
 
 .logo-img {
     height: 40px;
-    margin-top:20px;
+    margin: 0;
     cursor: pointer;
 }
 
 .site-name {
     color: #000;
     font-size: clamp(1rem, 4vw, 1.4rem);
-    margin-left: 10px;
-    margin-top: 20px;
+    margin: 0 0 0 10px;
 }
 
 .nav-menu {
     display: flex;
     gap: 20px;
     align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.32);
+    border-radius: 10px;    
+    padding: 1px 10px;
 }
 
 .nav-menu a {
@@ -119,8 +131,8 @@ header.scrolled .cart-icon {
 }
 
 .cart-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     color: #000;
     transition: color 0.3s;
 }
@@ -130,6 +142,7 @@ header.scrolled .cart-icon {
     align-items: center;
     gap: 5px;
     position: relative;
+    margin-right: 30px;
 }
 
 .cart-button:hover .cart-icon {
@@ -140,8 +153,7 @@ header.scrolled .cart-icon {
     background-color: #b43353;
     color: white;
     border-radius: 50%;
-    padding: 0;
-    padding: 2px 6px;
+    padding: 2px 3px;
     font-size: 0.75rem;
     width: 18px;
     height: 18px;
@@ -161,7 +173,7 @@ header.scrolled .cart-icon {
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .header-container {
-        padding: 0 10px;
+        padding: 0 30px;
     }
     
     .nav-menu {
@@ -184,25 +196,42 @@ header.scrolled .cart-icon {
 .hamburger .hamburger-icon {
   width: 24px;
   height: 24px;
+  padding-top: 2px;
   color: currentColor;
 }
 
 @media(max-width: 600px){
+    header {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        /* restore vertical padding so header content stays centered */
+        padding: 12px 20px;
+        min-height: 80px;
+        box-sizing: border-box;
+    }
+
     .hamburger {
         display: block;
         margin-left: auto;
+    }
+
+    .logo {
+        transform: translateX(-14px);
     }
 
     .nav-menu {
         display:none;
         flex-direction: column;
         gap: 10px;
-        background: white;
+        background: transparent;
         position: absolute;
-        top: 80px;
-        right: 20px;
+        top: 60px;
+        right: 70px;
         padding: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         z-index: 5;
         border-radius: 8px;
     }
@@ -223,7 +252,12 @@ header.scrolled .cart-icon {
     }
     /* Space between hamburger and cart icon */
     .cart-button {
-      margin-left: 8px;
+      margin-left: 4px;
+      margin-right: 20px;
+    }
+
+    .dropdown-menu a{
+        color: white;
     }
 
     /* Position the SHOP dropdown to the left of the toggle on mobile */
@@ -236,4 +270,20 @@ header.scrolled .cart-icon {
       margin-right: 5px;
       border-radius: 8px;
     }
-}
+    /* Mobile: change header text & icons on scroll */
+    header.scrolled .site-name,
+    header.scrolled .hamburger,
+    header.scrolled .cart-icon,
+    header.scrolled .nav-menu a,
+    header.scrolled .dropdown-toggle {
+        color: black !important;
+    }
+
+    header.home .site-name,
+    header.home .hamburger,
+    header.home .cart-icon,
+    header.home .nav-menu a,
+    header.home .dropdown-toggle {
+        color: white !important;
+    }
+    }

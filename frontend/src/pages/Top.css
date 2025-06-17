@@ -17,8 +17,7 @@ html, body {
     height: 100vh;
     overflow: hidden;
     position: relative;
-    margin-top: -80px;
-    padding-top: 80px;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,9 +73,9 @@ html, body {
 }
 
 .hero-button {
-  margin-top: 20px;
-  padding: clamp(0.75rem, 2vw, 1.5rem) clamp(1.5rem, 4vw, 2.5rem);
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  margin-top: 24px;
+  padding: clamp(1rem, 3vw, 2rem) clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.25rem, 3vw, 2rem);
   color: white;
   background: transparent;
   border: 3px solid white;
@@ -156,6 +155,7 @@ body:has(.top-container) {
   background: none;
   border: none;
   border-bottom: 3px solid transparent;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   outline: none;
@@ -202,7 +202,7 @@ body:has(.top-container) {
   background-color: #333;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
   align-self: start;
 }
@@ -221,27 +221,58 @@ body:has(.top-container) {
 
 /* 商品紹介セクション：モバイル向け調整 */
 @media (max-width: 600px) {
-  /* 画像とテキストを縦並びにしてみる */
+  /* 商品紹介全体の余白・幅・ボーダーを調整 */
+  .product-intro {
+    width: auto;
+    max-width: calc(100% - 32px);
+    margin: 20px auto 20px;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  /* タブを縦並びにして横スクロールしない */
+  .product-intro .tabs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    border-bottom: none;
+  }
+  .product-intro .tabs .tab-button {
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+  }
+  .product-intro .tabs .tab-button.active {
+    border-color: #333;
+  }
+
+  /* 商品詳細を縦並びに */
   .product-intro .product-details {
     flex-direction: column;
     align-items: center;
     gap: 16px;
   }
 
-  /* 画像の幅を画面幅の80%までに制限 */
+  /* 画像サイズを調整 */
   .product-intro .product-image {
     width: 80%;
-    max-width: 300px;
+    max-width: 240px;
+    border-radius: 8px;
   }
 
-  /* 商品テキストは幅100% */
+  /* テキスト部分をセンター寄せに */
   .product-intro .product-text {
     width: 100%;
-    text-align: center;   /* 中央揃えにして読みやすく */
+    text-align: center;
   }
 
-  /* ボタンも中央揃えに */
+  /* ボタンを中央に */
   .product-intro .product-text .product-button {
     align-self: center;
+    padding: 10px 16px;
+    font-size: 1rem;
   }
 }

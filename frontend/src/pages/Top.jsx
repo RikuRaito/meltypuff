@@ -56,7 +56,7 @@ function Top() {
                   className='product-image'
                 />
                 <div className='product-text'>
-                  <h3>ノンニコチンベイプ</h3>
+                  <h3>ノンニコチン</h3>
                   <p>アメリカのLOST MARYから日本向けに新登場</p>
                   <p>ニコチンを含んでいないので初心者におすすめ</p>
                   <button className='product-button' onClick={() => window.location.href='/shop-non'}>
@@ -76,7 +76,7 @@ function Top() {
                 />
                 <div className='product-text'>
                   <h3>ニコチンベイプ</h3>
-                  <p>Nastyはリッチでクセになるフレーバーが魅力の</p>
+                  <p>Nastyはリッチでクセになるフレーバー</p>
                   <p>ニコチンを含んだ世界中で人気のドバイ発のベイプブランドです</p>
                   <button className='product-button' onClick={() => window.location.href='/shop-nic'}>
                     商品を見てみる

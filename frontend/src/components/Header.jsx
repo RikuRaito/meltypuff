@@ -8,7 +8,6 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
     const [showUserMenu, setShowUserMenu] = useState(false)
     const [shopMenuOpen, setShopMenuOpen] = useState(false)
     const [localCartCount, setLocalCartCount] = useState(0)
-    const location = useLocation();
     const isRoot = currentPage === '/';
 
     // スクロール時のヘッダー背景変更
@@ -28,6 +27,10 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
         setIsScrolled(false)
     }
     }, [isRoot])
+
+    useEffect(() => {
+        setMenuOpen(false);
+    },[currentPage]);
 
     // ページ遷移関数
     const handleNavigate = (path) => {
