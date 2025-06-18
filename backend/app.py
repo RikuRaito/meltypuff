@@ -2,8 +2,10 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import json
+import uuid
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
+from square.client import Client
 
 # 環境変数の読み込み
 load_dotenv()
@@ -14,8 +16,12 @@ app.config['JSON_AS_ASCII'] = False
 # CORS設定（React側からのアクセスを許可）
 CORS(app, origins=['http://localhost:3000'])
 
+SQUARE_ACCESS_TOKEN = os.getenv('SQUARE_ACCESS_TOKEN')
+SQUARE_LOCATION_ID = os.getenv('SQUARE_LOCATION_ID')
+
 user_Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
 product_data_file = os.path.join(os.path.dirname(__file__), 'productDatabase.json')
+order_data_file = os.path.join(os.path.dirname(__file__), 'order.json')
 
 class User:
     def __init__(self, id, email,phone_number, password_hash,address_num,address_1,address_2):
@@ -66,7 +72,7 @@ class Product:
         self.name = name
         self.displayname = displayname
 
-
+#Function to load and save data into json store
 def load_data():
     if not os.path.exists(user_Data_file) or os.path.getsize(user_Data_file) == 0:
         with open(user_Data_file, 'w', encoding='utf-8') as f:
@@ -91,6 +97,21 @@ def load_products():
         Product(item['id'], item['price'], item.get('name', ''), item.get('displayname', ''))
         for item in product_list
     ]
+
+def load_orders():
+    # Ensure the JSON file exists
+    if not os.path.exists(order_data_file) or os.path.getsize(order_data_file) == 0:
+        with open(order_data_file, 'w', encoding='utf-8') as f:
+            json.dump([], f, ensure_ascii=False, indent=2)
+    with open(order_data_file, 'r', encoding='utf-8') as f:
+        return json.load(f)
+    
+def save_orders(orders):
+    # orders is expected to be a list of order dicts
+    with open(order_data_file, 'w', encoding='utf-8') as f:
+        json.dump(orders, f, ensure_ascii=False, indent=2)
+
+
 
 # ルートエンドポイント
 @app.route('/api/health', methods=['GET'])
@@ -272,11 +293,25 @@ def calc_amount():
             break
 
     total_amount += shipping_fee
-    
+
     return jsonify({
         'amount': total_amount,
         'shipping_fee': shipping_fee
         })
+
+@app.route('/api/checkout', methods=['POST'])
+def create_checkout():
+    orders = load_orders()
+    users = load_data()
+    data = request.get_json() or {}
+    items = data.get('cart')
+    amount = data.get('amount')
+    if (data.get('email')):
+        email = data.get('email')
+    else:
+        email = 'GUEST'
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

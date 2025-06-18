@@ -1,3 +1,8 @@
+const getUserEmail = () => {
+  return localStorage.getItem('isLoggedIn') === 'true'
+    ? JSON.parse(localStorage.getItem('user') || '{}').email
+    : null;
+}
 import React, { useState, useEffect } from 'react';
 import './Cart.css';
 
@@ -83,6 +88,41 @@ const Cart = () => {
     return sum + (p.price || 0) * item.qty;
   }, 0);
 
+  const handlePurchase = () => {
+    if(serverTotal < 2000) {
+      alert('ミニデバイス(合計2,000円未満の購入はできません')
+      return
+    }
+    const email = getUserEmail();
+    const body = {
+      items: cart,
+      amount: serverTotal
+    }
+    if (email) {
+      body.email = email
+    }
+
+    fetch('/api/checkout', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+      } else {
+        console.error('checkoutUrl not returned', data)
+        alert('決済ページの生成に失敗しました')
+      }
+    })
+    .catch(err => {
+      console.log('Checkout API error:', err);
+      alert('決済処理中にエラーが発生しました')
+    });
+  }
+  
+
   return (
     <div className="cart-container">
       <h2>ショッピングカート</h2>
@@ -122,7 +162,11 @@ const Cart = () => {
       <footer className="cart-footer">
         
         <div className="total">合計: ¥{serverTotal.toLocaleString()}</div>
-        <button className="checkout-button">支払う</button>
+        <button
+            className="checkout-button"    
+            onClick={handlePurchase}
+        >支払う</button>
+        
       </footer>
     </div>
   );
