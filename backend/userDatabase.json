@@ -3,8 +3,9 @@
     "id": 1,
     "email": "ss@ss",
     "password_hash": "scrypt:32768:8:1$lGRRBSnFGXo8xTdx$c5de8dc1958dc7165e874d11c8b1f42c24822f866877cce9782e481195a2dd8393b76383a40d53b400a100a85132e15dc70028ed8f8b01d1d4aff2bb92e92b69",
+    "phone_number": "93993",
     "address_num": "910-0855",
-    "address_1": "福井県福井市西方",
-    "address_2": "2-13-15"
+    "address_1": "福井県福井市",
+    "address_2": "西方"
   }
 }

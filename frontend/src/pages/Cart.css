@@ -106,3 +106,63 @@
     margin: 24px 0;
     margin-left: calc(100px + 16px);
 }
+
+@media (max-width: 600px) {
+  .shipping {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+/* Customer info form styling */
+.information-input {
+  margin: 24px auto;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 800px;
+}
+
+.information-input h3 {
+  flex: 1 1 100%;
+  margin: 0 0 12px;
+  font-weight: bold;
+}
+
+.information-input label {
+  flex: 1 1 calc(50% - 16px);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}
+
+.information-input label input {
+  margin-top: 6px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* On desktop, narrow the form and align right */
+@media (min-width: 600px) {
+  .information-input {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 24px auto;
+  }
+  .information-input label {
+    flex: 1 1 calc(50% - 16px);
+    margin-bottom: 16px;
+  }
+}

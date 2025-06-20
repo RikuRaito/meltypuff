@@ -1,0 +1,56 @@
+.redirect-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 160px); /* header+footer などを差し引いた高さ */
+  padding: 20px;
+  background: #f9f9f9;
+}
+
+.redirect-content {
+  max-width: 480px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.redirect-content h1 {
+  font-size: 1.8rem;
+  margin-bottom: 16px;
+  color: #333333;
+}
+
+.redirect-content p {
+  font-size: 1rem;
+  margin: 12px 0;
+  color: #555555;
+}
+
+.redirect-content .order-id {
+  font-weight: bold;
+  color: #111111;
+}
+
+.redirect-content .status.completed {
+  color: #28a745;
+}
+.redirect-content .status.failed {
+  color: #dc3545;
+}
+
+.redirect-button {
+  margin-top: 24px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  background: #333333;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.redirect-button:hover {
+  background: #000000;
+}

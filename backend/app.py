@@ -216,10 +216,14 @@ def update_password():
         'message': 'Password updated'
     }), 200
 
-@app.route('/api/account', methods=['GET'])
+@app.route('/api/account', methods=['GET', 'POST'])
 def account_info():
     users = load_data()
-    email = request.args.get('email')
+    if request.method == 'POST':
+        data = request.get_json() or {}
+        email = data.get('email')
+    else:
+        email = request.args.get('email')
     user= users.get(email)
     if not user:
         return jsonify ({
@@ -249,7 +253,7 @@ def account_update():
         }),404
     
     user = users[email]
-    user.phone_number = data.get('phone_number')
+    user.phone_number = data.get('phone')
     user.address_num = data.get('address_num')
     user.address_1 = data.get('address_1')
     user.address_2 = data.get('address_2')
@@ -259,6 +263,7 @@ def account_update():
         'status': 'Success',
         'email': user.email,
         'id': user.id,
+        'phone_number': user.phone_number,
         'address_num': user.address_num,
         'address_1': user.address_1,
         'address_2': user.address_2

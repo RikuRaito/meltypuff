@@ -20,11 +20,30 @@ const productsMap = {
     15: '/images/SlowBlow.jpg'
 }
 
-const Cart = () => {
+const Cart = ({isLoggedIn}) => {
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [serverTotal, setServerTotal] = useState(0);
   const [isOnlyNon, setIsOnlyNon] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [address1, setAddress1] = useState('');
+  const [address2, setAddress2] = useState('');
+
+  const lookupAddress = () => {
+    fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode.replace('-', '')}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.results && data.results[0]) {
+          const r = data.results[0];
+          setAddress1(r.address1 + r.address2);
+          setAddress2(r.address3);
+        }
+      })
+      .catch(err => console.error('郵便番号検索エラー:', err));
+  };
 
   // 全商品情報を取得
   useEffect(() => {
@@ -69,6 +88,19 @@ const Cart = () => {
         });
   }, [cart])
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      const email = localStorage.getItem('email')
+      if (email) {
+        fetch('/api/account', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ email })
+        })
+      }
+    }
+  })
+
   const handleQtyChange = (id, newQty) => {
     setCart(prev =>
       prev.map(item =>
@@ -96,7 +128,10 @@ const Cart = () => {
     const email = getUserEmail();
     const body = {
       items: cart,
-      amount: serverTotal
+      amount: serverTotal,
+      postalCode,
+      address1,
+      address2
     }
     if (email) {
       body.email = email
@@ -159,6 +194,38 @@ const Cart = () => {
       {isOnlyNon && (
         <div className='shipping'>ノンニコチンベイプ送料: ¥250</div>
       )}
+      <div className='information-input'>
+        <h3>お客様情報</h3>
+        <label>
+          氏名
+          <input type='text' name='customerName' placeholder='お名前を入力'/>
+        </label>
+        <label>メールアドレス
+          <input type='email' name='email' placeholder='メールアドレスを入力'/>
+        </label>
+        <label>電話番号
+          <input type='tel' name='phone' placeholder='電話番号を入力'/>
+        </label>
+        <label>
+          郵便番号
+          <input
+            type="text"
+            name="postalCode"
+            placeholder="1234567"
+            value={postalCode}
+            onChange={e => setPostalCode(e.target.value)}
+            onBlur={lookupAddress}
+          />
+        </label>
+        <label>
+          都道府県・市区町村
+          <input type="text" name="address1" value={address1} onChange={e => setAddress1(e.target.value)} placeholder="例: 東京都千代田区" />
+        </label>
+        <label>
+          詳細住所
+          <input type="text" name="address2" value={address2} onChange={e => setAddress2(e.target.value)} placeholder="例: 1-1-1" />
+        </label>
+      </div>
       <footer className="cart-footer">
         
         <div className="total">合計: ¥{serverTotal.toLocaleString()}</div>

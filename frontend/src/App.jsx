@@ -12,6 +12,7 @@ import Signup from './pages/Signup'
 import Hyoki from './components/Hyoki'
 import Account from './pages/Account'
 import Cart from './pages/Cart'
+import Redirect from './pages/Redirect'
 
 function App() {
   // 現在のページ状態
@@ -55,6 +56,7 @@ function App() {
     const stored = localStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(stored);
   }, [currentPage]);
+
 
 
   // ページ遷移関数（認証チェック付き）
@@ -114,9 +116,11 @@ function App() {
         case '/account':
           return <Account user={user} onLogout={handleLogout}/>
         case '/cart':
-          return <Cart />
+          return <Cart isLoggedIn={isLoggedIn}/>
         case '/signup':
           return <Signup />
+        case '/comfirmation_payment':
+          return <Redirect />
         default:
             return <Top /> 
     }

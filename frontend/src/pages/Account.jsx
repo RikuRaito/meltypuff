@@ -9,6 +9,23 @@ const Account = ({ user, onLogout }) => {
   const [address_1, setAddress_1] = useState('');
   const [address_2, setAddress_2] = useState('');
 
+  // 郵便番号から住所を自動取得
+  const lookupAddress = () => {
+    const zipcode = address_num.replace('-', '').trim();
+    if (!zipcode) return;
+    fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.results && data.results[0]) {
+          const r = data.results[0];
+          // r.address1: 都道府県, r.address2: 市区町村, r.address3: 町域
+          setAddress_1(`${r.address1}${r.address2}`);
+          setAddress_2(r.address3);
+        }
+      })
+      .catch(err => console.error('郵便番号検索エラー:', err));
+  };
+
   useEffect(() => {
     // マウント時にAPIからアカウント情報を取得
     const email = localStorage.getItem('email')
@@ -88,10 +105,11 @@ const Account = ({ user, onLogout }) => {
           value={address_num}
           onChange={e => setAddress_num(e.target.value)}
           placeholder="123-4567"
+          onBlur={lookupAddress}
         />
       </div>
       <div className="account-field">
-        <label className="address_1">住所1:</label>
+        <label className="address_1">都道府県・市区町村</label>
         <input
           type="text"
           value={address_1}
@@ -100,7 +118,7 @@ const Account = ({ user, onLogout }) => {
         />
       </div>
       <div className="account-field">
-        <label className="address_2">住所2:</label>
+        <label className="address_2">詳細住所</label>
         <input
           type="text"
           value={address_2}

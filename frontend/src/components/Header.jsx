@@ -132,7 +132,7 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
                     
                     {/* ログイン状態に応じてACCOUNTリンクを変更 */}
                     {isLoggedIn ? (
-                        <div className="nav-item dropdown user-menu">
+                        <div className={`nav-item dropdown user-menu ${showUserMenu ? 'open' : ''}`}>
                             <a 
                                 href="#" 
                                 className="user-name-link"
