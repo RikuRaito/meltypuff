@@ -116,8 +116,33 @@ body {
 
 /* レスポンシブ対応（小さめの画面ではカード幅を調整） */
 @media (max-width: 600px) {
+  /* 1. グリッドのカラム幅を調整 */
   .shopnic-container .product-grid {
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 16px;
+    gap: 12px;
+  }
+
+  /* 2. カード内余白を小さく */
+  .shopnic-container .product-card {
+    padding: 8px;         /* もとの padding: 16px を半分に */
+    margin: 0;            /* container 側で余白調整する */
+  }
+
+  /* 3. 「カートに追加」ボタンを縦長にしない */
+  .shopnic-container .product-purchase {
+    gap: 4px;
+  }
+  .shopnic-container .add-to-cart-btn {
+    flex-grow: 0 !important;  /* 余計に伸びないように */
+    width: auto;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+
+  /* 数量入力欄も少し小さめに */
+  .shopnic-container .product-quantity {
+    width: 50px;
+    padding: 4px 6px;
+    font-size: 0.9rem;
   }
 }

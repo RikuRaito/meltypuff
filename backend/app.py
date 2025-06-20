@@ -5,10 +5,14 @@ import json
 import uuid
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
-from square.client import Client
+from square import Square
+import httpx
 
 # 環境変数の読み込み
 load_dotenv()
+
+# Read Square environment variable
+SQUARE_ENVIRONMENT = os.getenv('SQUARE_ENVIRONMENT', 'sandbox')
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -110,7 +114,6 @@ def save_orders(orders):
     # orders is expected to be a list of order dicts
     with open(order_data_file, 'w', encoding='utf-8') as f:
         json.dump(orders, f, ensure_ascii=False, indent=2)
-
 
 
 # ルートエンドポイント
@@ -301,16 +304,71 @@ def calc_amount():
 
 @app.route('/api/checkout', methods=['POST'])
 def create_checkout():
+    print(SQUARE_ACCESS_TOKEN)
+    print("DEBUG - location:", SQUARE_LOCATION_ID)
+    data = request.get_json() or {}
+    items = data.get('items', [])
+    amount = data.get('amount', 0)
+    print("DEBUG - payload items:", items, "amount:", amount)
+    print("DEBUG - Square environment:", SQUARE_ENVIRONMENT)
     orders = load_orders()
     users = load_data()
-    data = request.get_json() or {}
-    items = data.get('cart')
-    amount = data.get('amount')
-    if (data.get('email')):
+    email = data.get('email')
+    if email and email in users:
         email = data.get('email')
     else:
         email = 'GUEST'
 
+    order_id = str(uuid.uuid4())
+
+    new_order = {
+        'order_id': order_id,
+        'email': email,
+        'items': items,
+        'amount': amount,
+        'status': 'PENDING'
+    }
+
+    orders.append(new_order)
+    save_orders(orders)
+
+    # Create Payment Links via direct HTTP request
+    headers = {
+        "Authorization": f"Bearer {SQUARE_ACCESS_TOKEN}",
+        "Content-Type": "application/json",
+        "Square-Version": "2025-06-19"
+    }
+    payload = {
+        "idempotency_key": order_id,
+        "quick_pay": {
+            "name": "Order Payment",
+            "price_money": {
+                "amount": amount,
+                "currency": "JPY"
+            },
+            "location_id": SQUARE_LOCATION_ID,
+            "redirect_url": "http://localhost:3000/"
+        }
+    }
+    # Determine Square Payment Links endpoint
+    if SQUARE_ENVIRONMENT == 'production':
+        api_url = "https://connect.squareup.com/v2/online-checkout/payment-links"
+    else:
+        api_url = "https://connect.squareupsandbox.com/v2/online-checkout/payment-links"
+    print("DEBUG - Square API endpoint URL:", api_url)
+    print("DEBUG - Request headers:", headers)
+    print("DEBUG - Request payload:", payload)
+    resp = httpx.post(
+        api_url,
+        headers=headers,
+        json=payload
+    )
+    print("DEBUG - Square response status:", resp.status_code, "body:", resp.text)
+    if resp.status_code == 200:
+        checkout_url = resp.json()["payment_link"]["url"]
+        return jsonify({"checkoutUrl": checkout_url})
+    else:
+        return jsonify({"error": resp.json()}), resp.status_code
 
 
 if __name__ == '__main__':
