@@ -11,8 +11,10 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Hyoki from './components/Hyoki'
 import Account from './pages/Account'
+import History from './pages/History'
 import Cart from './pages/Cart'
 import Redirect from './pages/Redirect'
+
 
 function App() {
   // 現在のページ状態
@@ -121,6 +123,8 @@ function App() {
           return <Signup />
         case '/comfirmation_payment':
           return <Redirect />
+        case '/order_history':
+          return <History isLoggedIn={isLoggedIn}/>
         default:
             return <Top /> 
     }
@@ -141,7 +145,9 @@ function App() {
         {renderPage()}
       </main>
       
-      {currentPage !== '/cart' && <Footer navigateTo={navigateTo} />}
+      {![ '/cart', '/order_history', '/account' ].includes(currentPage) && (
+        <Footer navigateTo={navigateTo} />
+      )}
     </div>
   )
 }

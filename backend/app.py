@@ -375,6 +375,23 @@ def create_checkout():
     else:
         return jsonify({"error": resp.json()}), resp.status_code
 
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    users = load_data()
+    orders = load_orders()
+    if not email:
+        return jsonify({
+            'status': 'Failed',
+            'message': 'User not found'
+        })
+    email = request.args.get('email')
+    matched = [o for o in orders if o.get('email') == email]
+    return jsonify({
+        'status': 'Success',
+        'orders': matched
+    })
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)

@@ -159,7 +159,7 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
                                         href="/orders"
                                         onClick={(e) => { 
                                             e.preventDefault(); 
-                                            handleNavigate('/orders');
+                                            handleNavigate('/order_history');
                                             setShowUserMenu(false);
                                         }}
                                     >

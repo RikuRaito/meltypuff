@@ -44,7 +44,7 @@ const Account = ({ user, onLogout }) => {
       })
       .then(data => {
         setUserInfo(data);
-        setPhone(data.phone || '');
+        setPhone(data.phone_number || '');
         setAddress_num(data.address_num || '');
         setAddress_1(data.address_1 || '');
         setAddress_2(data.address_2 || '');
