@@ -1,6 +1,6 @@
 const getUserEmail = () => {
   return localStorage.getItem('isLoggedIn') === 'true'
-    ? JSON.parse(localStorage.getItem('user') || '{}').email
+    ? localStorage.getItem('email')
     : null;
 }
 import React, { useState, useEffect } from 'react';
@@ -90,13 +90,26 @@ const Cart = ({isLoggedIn}) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      const email = localStorage.getItem('email')
+      const email = getUserEmail();
       if (email) {
         fetch('/api/account', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email })
         })
+        .then(res => res.json())
+        .then(data => {
+          if(data.status === 'Success'){
+            console.log('Got user data')
+            setPostalCode(data.address_num)
+            setAddress1(data.address_1)
+            setAddress2(data.address_2)
+            setPhone(data.phone_number)
+          }
+        })
+        .catch(err => {
+          console.log('Failed to get user information')
+        });
       }
     }
   })
@@ -201,10 +214,20 @@ const Cart = ({isLoggedIn}) => {
           <input type='text' name='customerName' placeholder='お名前を入力'/>
         </label>
         <label>メールアドレス
-          <input type='email' name='email' placeholder='メールアドレスを入力'/>
+          <input
+            type='email'
+            name='email'
+            placeholder='メールアドレスを入力'
+            value={email}
+            onChange={e => {setEmail(e.target.value)}}/>
         </label>
         <label>電話番号
-          <input type='tel' name='phone' placeholder='電話番号を入力'/>
+          <input
+            type='tel'
+            name='phone'
+            placeholder='電話番号を入力'
+            value={phone}
+            onChange={e => setPhone(e.target.value)}/>
         </label>
         <label>
           郵便番号
@@ -219,11 +242,21 @@ const Cart = ({isLoggedIn}) => {
         </label>
         <label>
           都道府県・市区町村
-          <input type="text" name="address1" value={address1} onChange={e => setAddress1(e.target.value)} placeholder="例: 東京都千代田区" />
+          <input 
+            type="text"
+            name="address1"
+            value={address1}
+            onChange={e => setAddress1(e.target.value)}
+            placeholder="例: 東京都千代田区" />
         </label>
         <label>
           詳細住所
-          <input type="text" name="address2" value={address2} onChange={e => setAddress2(e.target.value)} placeholder="例: 1-1-1" />
+          <input 
+            type="text"
+            name="address2"
+            value={address2}
+            onChange={e => setAddress2(e.target.value)}
+            placeholder="例: 1-1-1" />
         </label>
       </div>
       <footer className="cart-footer">
