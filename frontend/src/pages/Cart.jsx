@@ -32,6 +32,7 @@ const Cart = ({isLoggedIn}) => {
   const [address1, setAddress1] = useState('');
   const [address2, setAddress2] = useState('');
 
+  const isInfoComplete = name.trim() && email.trim() && phone.trim() && address1.trim() && address2.trim();
   const lookupAddress = () => {
     fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${postalCode.replace('-', '')}`)
       .then(res => res.json())
@@ -89,30 +90,32 @@ const Cart = ({isLoggedIn}) => {
   }, [cart])
 
   useEffect(() => {
-    if (isLoggedIn) {
-      const email = getUserEmail();
-      if (email) {
-        fetch('/api/account', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if(data.status === 'Success'){
-            console.log('Got user data')
-            setPostalCode(data.address_num)
-            setAddress1(data.address_1)
-            setAddress2(data.address_2)
-            setPhone(data.phone_number)
-          }
-        })
-        .catch(err => {
-          console.log('Failed to get user information')
-        });
-      }
-    }
-  })
+    if (!isLoggedIn) return;
+    const email = getUserEmail();
+    if (!email) return;
+    fetch('/api/account', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to load account data");
+        return res.json();
+      })
+      .then(data => {
+        if (data.status === 'Success') {
+          setName(data.name || '');
+          setEmail(data.email || '');
+          setPhone(data.phone_number || '');
+          setPostalCode(data.address_num || '');
+          setAddress1(data.address_1 || '');
+          setAddress2(data.address_2 || '');
+        } else {
+          console.error('Account API error:', data.message);
+        }
+      })
+      .catch(err => console.error('Fetch account error:', err));
+  }, [isLoggedIn]);
 
   const handleQtyChange = (id, newQty) => {
     setCart(prev =>
@@ -208,10 +211,16 @@ const Cart = ({isLoggedIn}) => {
         <div className='shipping'>ノンニコチンベイプ送料: ¥250</div>
       )}
       <div className='information-input'>
-        <h3>お客様情報</h3>
+        <h3>お客様情報（全てご入力ください）</h3>
         <label>
           氏名
-          <input type='text' name='customerName' placeholder='お名前を入力'/>
+          <input 
+            type='text' 
+            name='customerName' 
+            placeholder='お名前を入力'
+            value={name}
+            onChange={e => setName(e.target.value)}
+            />
         </label>
         <label>メールアドレス
           <input
@@ -263,8 +272,15 @@ const Cart = ({isLoggedIn}) => {
         
         <div className="total">合計: ¥{serverTotal.toLocaleString()}</div>
         <button
-            className="checkout-button"    
-            onClick={handlePurchase}
+            className={`checkout-button ${isInfoComplete ? 'active' : ''}`}    
+            onClick={() => {
+              if (!isInfoComplete) {
+                alert('配送先情報を全て入力してください');
+                return;
+              } 
+              handlePurchase();
+            }}
+            disabled={!isInfoComplete}
         >支払う</button>
         
       </footer>

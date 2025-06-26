@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from square import Square
 import httpx
+import smtplib
+from email.message import EmailMessage
 
 # 環境変数の読み込み
 load_dotenv()
@@ -22,6 +24,40 @@ CORS(app, origins=['http://localhost:3000'])
 
 SQUARE_ACCESS_TOKEN = os.getenv('SQUARE_ACCESS_TOKEN')
 SQUARE_LOCATION_ID = os.getenv('SQUARE_LOCATION_ID')
+
+# SMTP settings
+SMTP_HOST = os.getenv('SMTP_HOST')
+SMTP_PORT = int(os.getenv('SMTP_PORT', 587))
+SMTP_USER = os.getenv('SMTP_USER')
+SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
+EMAIL_FROM = os.getenv('EMAIL_FROM')  # e.g. "no-reply@yourdomain.com"
+def send_order_email(to_address, order):
+    msg = EmailMessage()
+    msg['Subject'] = f"ご注文確認: {order['order_id']}"
+    msg['From'] = EMAIL_FROM
+    msg['To'] = to_address
+    body = f"""\
+{order['email']} 様、
+
+ご注文を承りました。以下の内容で確認させていただきます。
+
+注文ID: {order['order_id']}
+合計金額: ¥{order['amount']}
+ステータス: {order['status']}
+
+商品:
+"""
+    for item in order['items']:
+        body += f"- 商品ID {item['id']} × {item['qty']}\n"
+    body += "\nありがとうございました。"
+
+    msg.set_content(body)
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
+        smtp.starttls()
+        smtp.login(SMTP_USER, SMTP_PASSWORD)
+        smtp.send_message(msg)
+
+
 
 user_Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
 product_data_file = os.path.join(os.path.dirname(__file__), 'productDatabase.json')
@@ -337,6 +373,12 @@ def create_checkout():
     orders.append(new_order)
     save_orders(orders)
 
+        # 注文確認メールを送信
+    try:
+        if email and email != 'GUEST':
+            send_order_email(email, new_order)
+    except Exception as e:
+        print("メール送信エラー:", e)
     # Create Payment Links via direct HTTP request
     headers = {
         "Authorization": f"Bearer {SQUARE_ACCESS_TOKEN}",
@@ -352,7 +394,7 @@ def create_checkout():
                 "currency": "JPY"
             },
             "location_id": SQUARE_LOCATION_ID,
-            "redirect_url": "http://localhost:3000/"
+            "redirect_url": "http://localhost:3000/comfirmation_payment"
         }
     }
     # Determine Square Payment Links endpoint
@@ -360,15 +402,11 @@ def create_checkout():
         api_url = "https://connect.squareup.com/v2/online-checkout/payment-links"
     else:
         api_url = "https://connect.squareupsandbox.com/v2/online-checkout/payment-links"
-    print("DEBUG - Square API endpoint URL:", api_url)
-    print("DEBUG - Request headers:", headers)
-    print("DEBUG - Request payload:", payload)
     resp = httpx.post(
         api_url,
         headers=headers,
         json=payload
     )
-    print("DEBUG - Square response status:", resp.status_code, "body:", resp.text)
     if resp.status_code == 200:
         checkout_url = resp.json()["payment_link"]["url"]
         return jsonify({"checkoutUrl": checkout_url})
@@ -390,6 +428,34 @@ def get_history():
         'status': 'Success',
         'orders': matched
     })
+
+@app.route('/api/complete_order', methods=['POST'])
+def complete_order():
+    orders = load_orders
+    data = request.get_json() or {}
+    order_id = data.get('order_id')
+    status = data.get('status')
+    update = False
+
+    for order in orders:
+        if order['order_id'] == order_id:
+            order['status'] == status
+            update = True
+            break
+
+    save_orders(orders)
+
+    if update == True:
+        return jsonify ({
+            'status': 'Success',
+            'order_id': order_id,
+            'new_status': status
+        })
+    elif not update:
+        return jsonify ({
+            'status': 'Failed',
+            'message': 'Order not found'
+        }), 404
 
 
 

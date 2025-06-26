@@ -4,9 +4,9 @@ import './ShopNic.css'
 const products = [
     {
         id: 11,
-        name: 'Nasty 8.5K - パイナップルアイス',
-        img: '/images/PineappleIce.jpg',
-        price: 3980,
+        name: 'Nasty 20K - パイナップルアイス',
+        img: '/images/pineapple_20K.png',
+        price: 4980,
     },
     {
         id:12,
