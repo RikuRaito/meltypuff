@@ -91,7 +91,7 @@ const Cart = ({isLoggedIn}) => {
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    const email = getUserEmail();
+    email = getUserEmail();
     if (!email) return;
     fetch('/api/account', {
       method: 'POST',
@@ -141,16 +141,15 @@ const Cart = ({isLoggedIn}) => {
       alert('ミニデバイス(合計2,000円未満の購入はできません')
       return
     }
-    const email = getUserEmail();
+
     const body = {
       items: cart,
+      email: email,
       amount: serverTotal,
+      phone: phone,
       postalCode,
       address1,
       address2
-    }
-    if (email) {
-      body.email = email
     }
 
     fetch('/api/checkout', {
@@ -228,7 +227,7 @@ const Cart = ({isLoggedIn}) => {
             name='email'
             placeholder='メールアドレスを入力'
             value={email}
-            onChange={e => {setEmail(e.target.value)}}/>
+            onChange={e => setEmail(e.target.value)}/>
         </label>
         <label>電話番号
           <input

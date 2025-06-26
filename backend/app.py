@@ -345,26 +345,26 @@ def calc_amount():
 
 @app.route('/api/checkout', methods=['POST'])
 def create_checkout():
-    print(SQUARE_ACCESS_TOKEN)
-    print("DEBUG - location:", SQUARE_LOCATION_ID)
     data = request.get_json() or {}
     items = data.get('items', [])
     amount = data.get('amount', 0)
     print("DEBUG - payload items:", items, "amount:", amount)
     print("DEBUG - Square environment:", SQUARE_ENVIRONMENT)
     orders = load_orders()
+    account = False
     users = load_data()
     email = data.get('email')
-    if email and email in users:
-        email = data.get('email')
-    else:
-        email = 'GUEST'
+    phone = data.get('phone')
+    if email in users:
+        account = True
 
     order_id = str(uuid.uuid4())
 
     new_order = {
         'order_id': order_id,
+        'account': account,
         'email': email,
+        'phone': phone,
         'items': items,
         'amount': amount,
         'status': 'PENDING'
@@ -372,7 +372,7 @@ def create_checkout():
 
     orders.append(new_order)
     save_orders(orders)
-
+    print(f"DEBUG- phone: {phone}, email: {email}")
         # 注文確認メールを送信
     try:
         if email and email != 'GUEST':
@@ -393,8 +393,13 @@ def create_checkout():
                 "amount": amount,
                 "currency": "JPY"
             },
-            "location_id": SQUARE_LOCATION_ID,
+            "location_id": SQUARE_LOCATION_ID
+        },
+        "checkout_options": {
             "redirect_url": "http://localhost:3000/comfirmation_payment"
+        },
+        "pre_populated_data": {
+            "buyer_email": email
         }
     }
     # Determine Square Payment Links endpoint
@@ -412,6 +417,7 @@ def create_checkout():
         return jsonify({"checkoutUrl": checkout_url})
     else:
         return jsonify({"error": resp.json()}), resp.status_code
+    
 
 @app.route('/api/history', methods=['GET'])
 def get_history():

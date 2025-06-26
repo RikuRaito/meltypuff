@@ -12,11 +12,6 @@ function Redirect() {
     navigate('/')
   }
 
-  useEffect(() => {
-    orderId = searchParams.get('orderId');
-    status = searchParams.get('status')
-  })
-
   const completeOrder = () => {
     fetch('/api/complete_order',{
         method: 'POST',
