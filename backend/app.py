@@ -31,7 +31,11 @@ SMTP_PORT = int(os.getenv('SMTP_PORT', 587))
 SMTP_USER = os.getenv('SMTP_USER')
 SMTP_PASSWORD = os.getenv('SMTP_PASSWORD')
 EMAIL_FROM = os.getenv('EMAIL_FROM')  # e.g. "no-reply@yourdomain.com"
+
 def send_order_email(to_address, order):
+    # Build product ID → displayname map
+    products = load_products()
+    product_map = {p.id: p.displayname for p in products}
     msg = EmailMessage()
     msg['Subject'] = f"ご注文確認: {order['order_id']}"
     msg['From'] = EMAIL_FROM
@@ -48,8 +52,9 @@ def send_order_email(to_address, order):
 商品:
 """
     for item in order['items']:
-        body += f"- 商品ID {item['id']} × {item['qty']}\n"
-    body += "\nありがとうございました。"
+        display = product_map.get(item['id'], f"ID:{item['id']}")
+        body += f"- {display} × {item['qty']}\n"
+    body += "\nありがとうございました。発送まで今しばらくお待ちくださいませ。"
 
     msg.set_content(body)
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
@@ -57,6 +62,37 @@ def send_order_email(to_address, order):
         smtp.login(SMTP_USER, SMTP_PASSWORD)
         smtp.send_message(msg)
 
+def send_business_notification(order):
+    # Load products for display names
+    products = load_products()
+    product_map = {p.id: p.displayname for p in products}
+    msg = EmailMessage()
+    msg['Subject'] = f"新規注文通知: {order['order_id']}"
+    msg['From'] = EMAIL_FROM
+    # Replace these with your business notification addresses, or use a list
+    msg['To'] = os.getenv('BUSINESS_NOTIFICATION_EMAIL', EMAIL_FROM)
+    body = f"""\
+ビジネスチーム各位、
+
+新しい注文を受け付けました。詳細は以下の通りです。
+
+注文ID: {order['order_id']}
+登録メール: {order.get('email', 'GUEST')}
+電話番号: {order.get('phone', '')}
+合計金額: ¥{order['amount']}
+
+商品一覧:
+"""
+    for item in order['items']:
+        display = product_map.get(item['id'], f"ID:{item['id']}")
+        body += f"- {display} × {item['qty']}\n"
+    body += "\n-------------------------\n"
+
+    msg.set_content(body)
+    with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
+        smtp.starttls()
+        smtp.login(SMTP_USER, SMTP_PASSWORD)
+        smtp.send_message(msg)
 
 
 user_Data_file = os.path.join(os.path.dirname(__file__), 'userDatabase.json')
@@ -179,6 +215,42 @@ def get_item(item_id):
     data = load_data()
     item = next((i for i in data if i['id'] == item_id), None)
     return (jsonify({"data": item}), 200) if item else (jsonify({"error": "データが見つかりません"}), 404)
+
+@app.route('/api/contact', methods=['POST'])
+def contact():
+    data = request.get_json() or {}
+    email = data.get('email')
+    message = data.get('message')
+    msg = EmailMessage()
+    msg['Subject'] = f"新規お問い合わせ"
+    msg['From'] = EMAIL_FROM
+    msg['To'] = SMTP_USER
+    body = f"""\
+    ビジネスチーム各位
+    {email}様よりお問い合わせがありました。
+
+    {message}
+    
+    速やかに返信をお願いします。
+    """
+    msg.set_content(body)
+    try:
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
+            smtp.starttls()
+            smtp.login(SMTP_USER, SMTP_PASSWORD)
+            smtp.send_message(msg)
+    except Exception as e:
+        print("お問い合わせメール送信エラー:", e)
+        return jsonify({
+            'status': 'Failed',
+            'message': 'Email send error'
+            }), 500
+    
+    return jsonify ({
+        'status': 'Success',
+        'message': 'お問い合わせを送信しました'
+    }), 200
+
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
@@ -372,13 +444,8 @@ def create_checkout():
 
     orders.append(new_order)
     save_orders(orders)
-    print(f"DEBUG- phone: {phone}, email: {email}")
-        # 注文確認メールを送信
-    try:
-        if email and email != 'GUEST':
-            send_order_email(email, new_order)
-    except Exception as e:
-        print("メール送信エラー:", e)
+    
+    
     # Create Payment Links via direct HTTP request
     headers = {
         "Authorization": f"Bearer {SQUARE_ACCESS_TOKEN}",
@@ -437,27 +504,47 @@ def get_history():
 
 @app.route('/api/complete_order', methods=['POST'])
 def complete_order():
-    orders = load_orders
+    orders = load_orders()
     data = request.get_json() or {}
     order_id = data.get('order_id')
     status = data.get('status')
+    email = data.get('email')
     update = False
+
+    if order_id or status or email or update:
+        return jsonify ({
+            'status': 'Failed',
+            'message': 'Invalid data'
+        })
 
     for order in orders:
         if order['order_id'] == order_id:
-            order['status'] == status
+            order['status'] = status
             update = True
             break
 
     save_orders(orders)
+    print(f"email: {email}")
+        # 注文確認メールを送信
+    if update:
+        try:
+            send_order_email(
+                next(o for o in orders if o.get('order_id') == order_id)['email'],
+                next(o for o in orders if o.get('order_id') == order_id)
+            )
+            send_business_notification(
+                next(o for o in orders if o.get('order_id') == order_id)
+            )
+        except Exception as e:
+            print('送信エラー')
 
-    if update == True:
+    if update:
         return jsonify ({
             'status': 'Success',
             'order_id': order_id,
             'new_status': status
         })
-    elif not update:
+    else:
         return jsonify ({
             'status': 'Failed',
             'message': 'Order not found'

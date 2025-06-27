@@ -212,7 +212,7 @@ const Cart = ({isLoggedIn}) => {
       <div className='information-input'>
         <h3>お客様情報（全てご入力ください）</h3>
         <label>
-          氏名
+          氏名（英語で入力ください）
           <input 
             type='text' 
             name='customerName' 
