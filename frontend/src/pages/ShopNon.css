@@ -63,9 +63,10 @@ body {
 }
 
 /* 情報部分 */
-.shopnon-container.product-info {
+.shopnon-container .product-info {
   padding: 16px;
   flex-grow: 1; /* 後続の購入エリアが下に来るようにする */
+  margin-top: auto;
 }
 
 .shopnon-container .product-name {

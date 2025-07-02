@@ -71,6 +71,7 @@ body {
 .shopnic-container .product-name {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
+  
 }
 
 .shopnic-container .product-price {
@@ -85,6 +86,7 @@ body {
   align-items: center;
   padding: 0 16px 16px;
   gap: 8px;
+  min-height: 2.8rem;
 }
 
 /* 数量入力 */
@@ -144,5 +146,18 @@ body {
     width: 50px;
     padding: 4px 6px;
     font-size: 0.9rem;
+  }
+
+  .shopnic-container .product-purchase {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shopnic-container .product-purchase .product-quantity {
+    width: 70%;
+  }
+
+  .shopnic-container .product-purchase .add-to-cart-btn {
+    width: 80%;
   }
 }

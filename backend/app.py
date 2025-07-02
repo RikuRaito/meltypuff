@@ -444,6 +444,7 @@ def create_checkout():
 
     orders.append(new_order)
     save_orders(orders)
+    print(email)
     
     
     # Create Payment Links via direct HTTP request
