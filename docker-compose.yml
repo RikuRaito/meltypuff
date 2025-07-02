@@ -19,6 +19,7 @@ services:
       - VITE_FORCE_POLLING=true  # 追加の強制ポーリング
     networks:
       - app-network
+    restart: unless-stopped
 
   # Flask バックエンド
   backend:
@@ -29,8 +30,17 @@ services:
       - ./backend:/app
     environment:
       - FLASK_ENV=development
+    env_file:
+      - ./backend/.env
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
 
   # nginx リバースプロキシ
   nginx:
@@ -42,6 +52,7 @@ services:
       - backend
     networks:
       - app-network
+    restart: unless-stopped
 
 networks:
   app-network:

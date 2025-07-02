@@ -9,6 +9,7 @@ COPY requirements.txt .
 
 # 依存関係をインストール
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir gunicorn
 
 # ソースコードをコピー
 COPY . .
@@ -17,4 +18,4 @@ COPY . .
 EXPOSE 5001
 
 # Flask アプリを起動
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5001", "app:app"]

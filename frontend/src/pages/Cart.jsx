@@ -91,12 +91,13 @@ const Cart = ({isLoggedIn}) => {
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    email = getUserEmail();
-    if (!email) return;
+    const userEmail = getUserEmail();
+    if (!userEmail) return;
+    setEmail(userEmail);
     fetch('/api/account', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email: userEmail })
     })
       .then(res => {
         if (!res.ok) throw new Error("Failed to load account data");
@@ -212,7 +213,7 @@ const Cart = ({isLoggedIn}) => {
       <div className='information-input'>
         <h3>お客様情報（全てご入力ください）</h3>
         <label>
-          氏名（英語で入力ください）
+          氏名（英語）
           <input 
             type='text' 
             name='customerName' 

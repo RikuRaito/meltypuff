@@ -26,7 +26,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         // 開発時：直接Dockerのバックエンドに接続
-        target: 'http://localhost:5001',
+        target: 'http://backend:5001',
         changeOrigin: true
       }
     }
