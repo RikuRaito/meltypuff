@@ -6,11 +6,9 @@ function Redirect() {
   const [searchParams] = useSearchParams()
   const orderId = searchParams.get('orderId') || ''
   const status = searchParams.get('status') || ''
+  const email = localStorage.getItem('email') || '';
   const navigate = useNavigate()
 
-  const handleHome = () => {
-    navigate('/')
-  }
 
   const completeOrder = () => {
     fetch('/api/complete_order',{
@@ -18,19 +16,25 @@ function Redirect() {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             order_id: orderId,
-            status: status          
+            status: status,
+            email
         })
     })
     .then(res => res.json())
     .then(data => {
         console.log('Complete order response:' ,data)
     })
-    .cathc(err => {
-        console.err('Complete order error:', err)
+    .catch(err => {
+        console.error('Complete order error:', err)
     })
   }
 
   useEffect(() => {
+    console.log('Redirect mounted with params:', {
+      orderId: searchParams.get('orderId'),
+      status: searchParams.get('status')
+    });
+    console.log(orderId, status, email)
     if (orderId && status) {
         completeOrder()
     }
@@ -49,7 +53,7 @@ function Redirect() {
         </p>
         <button
           className="redirect-button"
-          onClick={handleHome}
+          onClick={() => window.location.href='/'}
         >
           ホームに戻る
         </button>

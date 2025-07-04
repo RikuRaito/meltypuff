@@ -142,6 +142,7 @@ const Cart = ({isLoggedIn}) => {
       alert('ミニデバイス(合計2,000円未満の購入はできません')
       return
     }
+    localStorage.setItem('email',email);
 
     const body = {
       items: cart,

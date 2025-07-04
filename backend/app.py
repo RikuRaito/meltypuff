@@ -24,6 +24,8 @@ CORS(app, origins=['http://localhost:3000'])
 
 SQUARE_ACCESS_TOKEN = os.getenv('SQUARE_ACCESS_TOKEN')
 SQUARE_LOCATION_ID = os.getenv('SQUARE_LOCATION_ID')
+SQUARE_ACCESS_TOKEN_sandbox = os.getenv('SQUARE_ACCESS_TOKEN_sandbox')
+SQUARE_LOCATION_ID_sandbox = os.getenv('SQUARE_LOCATION_ID_sandbox')
 
 # SMTP settings
 SMTP_HOST = os.getenv('SMTP_HOST')
@@ -448,12 +450,12 @@ def create_checkout():
     
     
     # Create Payment Links via direct HTTP request
-    headers = {
+    headers_pro = {
         "Authorization": f"Bearer {SQUARE_ACCESS_TOKEN}",
         "Content-Type": "application/json",
         "Square-Version": "2025-06-19"
     }
-    payload = {
+    payload_pro = {
         "idempotency_key": order_id,
         "quick_pay": {
             "name": "Order Payment",
@@ -464,22 +466,50 @@ def create_checkout():
             "location_id": SQUARE_LOCATION_ID
         },
         "checkout_options": {
-            "redirect_url": "http://localhost:3000/comfirmation_payment"
+            "redirect_url": f"http://localhost:3000/confirmation_payment?orderId={order_id}&status=COMPLETED"
         },
         "pre_populated_data": {
             "buyer_email": email
         }
     }
+    headers_san = {
+        "Authorization": f"Bearer {SQUARE_ACCESS_TOKEN_sandbox}",
+        "Content-Type": "application/json",
+        "Square-Version": "2025-06-19"
+    }
+    payload_san = {
+        "idempotency_key": order_id,
+        "quick_pay": {
+            "name": "Order Payment (Sandbox)",
+            "price_money": {
+                "amount": amount,
+                "currency": "JPY"
+            },
+            "location_id": SQUARE_LOCATION_ID_sandbox
+        },
+        "checkout_options": {
+            "redirect_url": f"http://localhost:3000/confirmation_payment?orderId={order_id}&status=COMPLETED"
+        },
+        "pre_populated_data": {
+            "buyer_email": email
+        }
+    }
+    
     # Determine Square Payment Links endpoint
     if SQUARE_ENVIRONMENT == 'production':
         api_url = "https://connect.squareup.com/v2/online-checkout/payment-links"
+        resp = httpx.post(
+            api_url,
+            headers=headers_pro,
+            json=payload_pro
+        )
     else:
         api_url = "https://connect.squareupsandbox.com/v2/online-checkout/payment-links"
-    resp = httpx.post(
-        api_url,
-        headers=headers,
-        json=payload
-    )
+        resp = httpx.post(
+            api_url,
+            headers=headers_san,
+            json=payload_san   
+        )
     if resp.status_code == 200:
         checkout_url = resp.json()["payment_link"]["url"]
         return jsonify({"checkoutUrl": checkout_url})
@@ -505,27 +535,24 @@ def get_history():
 
 @app.route('/api/complete_order', methods=['POST'])
 def complete_order():
+    
     orders = load_orders()
     data = request.get_json() or {}
     order_id = data.get('order_id')
     status = data.get('status')
     email = data.get('email')
     update = False
-
-    if order_id or status or email or update:
-        return jsonify ({
-            'status': 'Failed',
-            'message': 'Invalid data'
-        })
+    print(f'order_id: {order_id}, status: {status}')
 
     for order in orders:
         if order['order_id'] == order_id:
             order['status'] = status
             update = True
             break
-
+    
     save_orders(orders)
     print(f"email: {email}")
+    print(f"update: {update}")
         # 注文確認メールを送信
     if update:
         try:
@@ -533,11 +560,13 @@ def complete_order():
                 next(o for o in orders if o.get('order_id') == order_id)['email'],
                 next(o for o in orders if o.get('order_id') == order_id)
             )
+            print(f"Completed send email to customer email:{email}")
             send_business_notification(
                 next(o for o in orders if o.get('order_id') == order_id)
             )
         except Exception as e:
-            print('送信エラー')
+            print('送信エラー:', e)
+            import traceback; traceback.print_exc()
 
     if update:
         return jsonify ({

@@ -121,7 +121,7 @@ function App() {
           return <Cart isLoggedIn={isLoggedIn}/>
         case '/signup':
           return <Signup />
-        case '/comfirmation_payment':
+        case '/confirmation_payment':
           return <Redirect />
         case '/order_history':
           return <History isLoggedIn={isLoggedIn}/>
