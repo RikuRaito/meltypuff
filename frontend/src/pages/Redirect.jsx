@@ -22,7 +22,7 @@ function Redirect() {
     })
     .then(res => res.json())
     .then(data => {
-        console.log('Complete order response:' ,data)
+        localStorage.setItem('cart', JSON.stringify([]));
     })
     .catch(err => {
         console.error('Complete order error:', err)
