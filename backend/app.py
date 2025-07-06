@@ -51,12 +51,17 @@ def send_order_email(to_address, order):
 合計金額: ¥{order['amount']}
 ステータス: {order['status']}
 
+配送先情報
+名前:{order['name']}
+郵便番号:{order['postal_code']}
+住所: {order['address1'] + order['address2']}
+
 商品:
 """
     for item in order['items']:
         display = product_map.get(item['id'], f"ID:{item['id']}")
         body += f"- {display} × {item['qty']}\n"
-    body += "\nありがとうございました。発送まで今しばらくお待ちくださいませ。"
+    body += "\nご注文いただき誠にありがとうございました。発送まで今しばらくお待ちくださいませ。"
 
     msg.set_content(body)
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as smtp:
@@ -80,8 +85,14 @@ def send_business_notification(order):
 
 注文ID: {order['order_id']}
 登録メール: {order.get('email', 'GUEST')}
-電話番号: {order.get('phone', '')}
+名前:{order['name']}
+電話番号: {order.get('phone')}
 合計金額: ¥{order['amount']}
+
+配送先情報
+郵便番号:{order['postal_code']}
+住所１:{order['address1']}
+住所２:{order['address2']}
 
 商品一覧:
 """
@@ -428,7 +439,11 @@ def create_checkout():
     account = False
     users = load_data()
     email = data.get('email')
+    name = data.get('name')
     phone = data.get('phone')
+    postal_code = data.get('postalCode')
+    address1 = data.get('address1')
+    address2 = data.get('address2')
     if email in users:
         account = True
 
@@ -439,6 +454,10 @@ def create_checkout():
         'account': account,
         'email': email,
         'phone': phone,
+        'name': name,
+        'postal_code': postal_code,
+        'address1': address1,
+        'address2': address2,
         'items': items,
         'amount': amount,
         'status': 'PENDING'
@@ -447,7 +466,6 @@ def create_checkout():
     orders.append(new_order)
     save_orders(orders)
     print(email)
-    
     
     # Create Payment Links via direct HTTP request
     headers_pro = {

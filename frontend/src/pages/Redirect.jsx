@@ -44,6 +44,8 @@ function Redirect() {
     <div className="redirect-page">
       <div className="redirect-content">
         <h1>ご注文ありがとうございます！</h1>
+        <h5>ご注文完了メールを送信させていただいております。</h5>
+        <h5>（迷惑メールもご確認ください）</h5>
         <p>
           注文番号：
           <span className="order-id">{orderId}</span>

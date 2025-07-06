@@ -148,6 +148,7 @@ const Cart = ({isLoggedIn}) => {
       items: cart,
       email: email,
       amount: serverTotal,
+      name: name,
       phone: phone,
       postalCode,
       address1,
