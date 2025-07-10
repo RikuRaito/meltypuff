@@ -47,11 +47,12 @@ services:
 
   # nginx リバースプロキシ
   nginx:
-    build: ./nginx
+    build: 
+      context: .
+      dockerfile: nginx/Dockerfile
     ports:
       - "80:80"
     depends_on:
-      - frontend
       - backend
     networks:
       - app-network
