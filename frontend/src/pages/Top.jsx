@@ -70,7 +70,7 @@ function Top() {
             <div className='tab-panel'>
               <div className='product-details'>
                 <img
-                  src='/images/PineappleIce.jpg'
+                  src='/images/pineapple_20K.png'
                   alt='Naty Image'
                   className='product-image'
                 />
