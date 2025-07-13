@@ -13,6 +13,8 @@ function Top() {
           autoPlay
           muted     
           loop
+          playsInline
+          preload="medadata"
         />
       </section>
       <div className='hero-content'>
