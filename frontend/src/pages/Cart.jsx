@@ -13,7 +13,7 @@ const productsMap = {
     4: '/images/lm_mango.jpg',
     5: '/images/lm_grape.jpg',
     6: '/images/lm_melon.jpg',
-    11: '/images/PineappleIce.jpg',
+    11: '/images/pineapple_20K.png',
     12: '/images/RedEnergy.jpg',
     13: '/images/Spearmint.jpg',
     14: '/images/AloeGrape.jpg',

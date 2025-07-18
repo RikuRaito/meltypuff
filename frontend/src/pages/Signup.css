@@ -1,4 +1,4 @@
-/* Signup.css */
+  /* Signup.css */
 
 /* ページ背景 */
 .signup-wrapper {
@@ -27,11 +27,10 @@
   color: #d1505c;
 }
 
-/* 入력グループ */
 .input-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 24px;
+  margin-bottom: 24px;  
 }
 
 .input-group label {
@@ -71,3 +70,4 @@
 .signup-button:hover {
   background-color: #a33845;
 }
+

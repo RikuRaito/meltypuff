@@ -30,7 +30,8 @@ function Header({ navigateTo, isLoggedIn, user, cartCount, onLogout, currentPage
 
     useEffect(() => {
         setMenuOpen(false);
-    },[currentPage]);
+        setShopMenuOpen(false);
+    }, [currentPage]);
 
     // ページ遷移関数
     const handleNavigate = (path) => {

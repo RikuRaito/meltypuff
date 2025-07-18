@@ -84,6 +84,10 @@ const Login = ({navigateTo, onLogin}) => {
           新規登録はこちら:&nbsp;
           <a href="/signup" className="signup-link">アカウント作成</a>
         </p>
+        <p className='reset-password'>
+          パスワードのリセットはこちら:&nbsp;
+          <a href='/ResetRequest' className='resetPassword-link'>パスワードのリセット</a>
+        </p>
       </form>
     </div>
    );

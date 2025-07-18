@@ -97,3 +97,21 @@ body {
 .signup-prompt .signup-link:hover {
   color: #a33845;
 }
+
+.reset-password {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.reset-password .resetPassword-link {
+  color: #d1505c;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.reset-password .resetPassword-link:hover {
+  color: #a33845;
+}

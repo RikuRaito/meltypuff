@@ -100,7 +100,7 @@ const ShopNon = () => {
                         />
                         <button
                             className="add-to-cart-btn"
-                            onClick={() => handleAddToCart(productId)}
+                            onClick={() => handleAddToCart(product.id)}
                         >
                             カートに追加
                         </button>

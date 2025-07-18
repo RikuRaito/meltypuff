@@ -14,7 +14,9 @@ import Account from './pages/Account'
 import History from './pages/History'
 import Cart from './pages/Cart'
 import Redirect from './pages/Redirect'
-
+import ResetRequest from './pages/ResetRequest'
+import DashLogin from './pages/DashLogin'
+import Dashboard from './pages/Dashboard'
 
 function App() {
   // 現在のページ状態
@@ -125,6 +127,12 @@ function App() {
           return <Redirect />
         case '/order_history':
           return <History isLoggedIn={isLoggedIn}/>
+        case '/ResetRequest':
+          return <ResetRequest />
+        case '/DashLogin:MeltyPuff':
+          return <DashLogin />
+        case '/MeltyPuff_Dashboard':
+          return <Dashboard />
         default:
             return <Top /> 
     }
@@ -133,19 +141,21 @@ function App() {
   return (
     <div className="app">
       {/* Headerに認証情報とナビゲーション関数を渡す */}
-      <Header 
-        navigateTo={navigateTo}
-        isLoggedIn={isLoggedIn}
-        user={user}
-        cartCount={cartCount}
-        currentPage={currentPage}
-      />
+      { !['/DashLogin:MeltyPuff', '/MeltyPuff_Dashboard'].includes(currentPage) && (
+        <Header 
+          navigateTo={navigateTo}
+          isLoggedIn={isLoggedIn}
+          user={user}
+          cartCount={cartCount}
+          currentPage={currentPage}
+        />
+      )}
       
       <main className="main-content">
         {renderPage()}
       </main>
       
-      {![ '/cart', '/order_history', '/account' ].includes(currentPage) && (
+      {![ '/cart', '/order_history', '/account','/DashLogin:MeltyPuff', '/MeltyPuff_Dashboard' ].includes(currentPage) && (
         <Footer navigateTo={navigateTo} />
       )}
     </div>
