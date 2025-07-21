@@ -251,11 +251,24 @@ def save_reset_requests(email, token):
         json.dump(requests, f, ensure_ascii=False, indent=2)
 
 def load_admin_data():
+    DEFAULT_ADMIN = {
+        "vape59336@gmail.com": {
+            "id": 1,
+            "password": "4444vape!"
+        }
+    }
     if not os.path.exists(admin_account) or os.path.getsize(admin_account) == 0:
-        with open(admin_account, 'w', encoding='utf-8') as f:
-            return json.load(f)
+        with open(admin_account, 'w', encoding='utf-8') as wf:
+            json.dump(DEFAULT_ADMIN, wf, ensure_ascii=False, indent=2)
+        return DEFAULT_ADMIN
     with open(admin_account, 'r', encoding='utf-8') as f:
-        return json.load(f)
+        try:
+            return json.load(f)
+        except json.JSONDecodeError:
+            # fallback: reset to default admin
+            with open(admin_account, 'w', encoding='utf-8') as wf:
+                json.dump(DEFAULT_ADMIN, wf, ensure_ascii=False, indent=2)
+            return DEFAULT_ADMIN
 
 
 # ルートエンドポイント
@@ -574,7 +587,7 @@ def create_checkout():
             "location_id": SQUARE_LOCATION_ID_sandbox
         },
         "checkout_options": {
-            "redirect_url": f"http://localhost/confirmation_payment?orderId={order_id}&status=COMPLETED"
+            "redirect_url": f"http://localhost:3000/confirmation_payment?orderId={order_id}&status=COMPLETED"
         },
         "pre_populated_data": {
             "buyer_email": email

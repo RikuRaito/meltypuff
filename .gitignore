@@ -1,1 +1,4 @@
 /backend/*.json
+/backend/*.env
+
+/frontend/vite.config.js

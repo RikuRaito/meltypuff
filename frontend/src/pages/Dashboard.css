@@ -55,3 +55,53 @@
   letter-spacing: 0.5px;
 }
 
+.order-item {
+    margin-bottom: 1rem;
+    border: 1px solid white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.order-summary {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+}
+
+.order-summary:hover {
+    background: #eaf1ff;
+}
+
+.order-id {flex: 2 1 40%; word-break: break-all;}
+.order-date {flex: 1 1 30%; text-align: center; color: #555;}
+.order-name {flex: 1 1 30%; text-align: right;}
+
+.order-detail {
+    background: #fafafa;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #e0e0e0;
+    animation: fadeIn 0.25s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0;}
+    to { opacity: 1;}
+}
+
+.order-detail p {
+    border: none;
+    background: none;
+    padding: 0 0 0.25rem 0;
+}
+
+.order-detail ul {
+    margin: 0.5rem 0 0;
+    padding-left: 1rem;
+}
+
+.order-detail li {
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
