@@ -1,4 +1,10 @@
+# Ignore all JSON files in backend...
 /backend/*.json
-/backend/*.env
+# ...but keep productDatabase.json under version control
+!/backend/productDatabase.json
 
+# Ignore backend environment files
+#/backend/*.env
+
+# Exclude local Vite config if desired
 /frontend/vite.config.js
