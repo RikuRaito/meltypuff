@@ -2,6 +2,7 @@
 /backend/*.json
 # ...but keep productDatabase.json under version control
 !/backend/productDatabase.json
+!/backend/coupon.json
 
 # Ignore backend environment files
 #/backend/*.env

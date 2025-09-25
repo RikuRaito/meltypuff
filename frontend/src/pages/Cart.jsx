@@ -17,7 +17,8 @@ const productsMap = {
     12: '/images/RedEnergy.jpg',
     13: '/images/Spearmint.jpg',
     14: '/images/AloeGrape.jpg',
-    15: '/images/SlowBlow.jpg'
+    15: '/images/SlowBlow.jpg',
+    16: '/images/PeachIce_20K.png'
 }
 
 const Cart = ({isLoggedIn}) => {
@@ -31,6 +32,8 @@ const Cart = ({isLoggedIn}) => {
   const [postalCode, setPostalCode] = useState('');
   const [address1, setAddress1] = useState('');
   const [address2, setAddress2] = useState('');
+  const [couponCode, setCouponCode] = useState('');
+  const [couponMessage, setCouponMessage] = useState('');
 
   const isInfoComplete = name.trim() && email.trim() && phone.trim() && address1.trim() && address2.trim();
   const lookupAddress = () => {
@@ -65,28 +68,42 @@ const Cart = ({isLoggedIn}) => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  //calculate amount with calc_amount API as cart is changed
-  useEffect(() => {
+  // Function to fetch calculated amount from server
+  const fetchCalcAmount = (cart) => {
     if (cart.length === 0) {
       setServerTotal(0);
+      setCouponMessage('');
       return;
     }
     fetch('/api/calc_amount', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({items: cart})
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        items: cart,
+        coupon: couponCode
+      })
     })
-        .then(res => res.json())
-        .then(data => {
-            console.log('Calculated Amount:', data.amount);
-            setServerTotal(data.amount);
-            if (data.shipping_fee > 0) {
-                setIsOnlyNon(true);
-            }
-        })
-        .catch(err => {
-            console.log('Failed to get amount from server',err)
-        });
+      .then(res => res.json())
+      .then(data => {
+        console.log('Calculated Amount:', data.amount);
+        setServerTotal(data.amount);
+        if (data.shipping_fee > 0) {
+          setIsOnlyNon(true);
+        }
+        if (data.message) {
+          setCouponMessage(data.message);
+        } else {
+          setCouponMessage('');
+        }
+      })
+      .catch(err => {
+        console.log('Failed to get amount from server', err)
+      });
+  };
+
+  //calculate amount with calc_amount API as cart is changed
+  useEffect(() => {
+    fetchCalcAmount(cart);
   }, [cart])
 
   useEffect(() => {
@@ -269,6 +286,19 @@ const Cart = ({isLoggedIn}) => {
             onChange={e => setAddress2(e.target.value)}
             placeholder="例: 1-1-1" />
         </label>
+      </div>
+      <div className='coupon'>
+        <h3>クーポンコード</h3>
+        <label>
+            <input
+              type='text'
+              value={couponCode}
+              onChange={e => setCouponCode(e.target.value)}
+              placeholder='クーポンコード'
+            />
+        </label>
+        <button onClick={() => fetchCalcAmount(cart)}>適用</button>
+        <h3>{couponMessage}</h3>
       </div>
       <footer className="cart-footer">
         

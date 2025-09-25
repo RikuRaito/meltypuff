@@ -173,3 +173,40 @@
     margin-bottom: 16px;
   }
 }
+
+/* Coupon area styling */
+.coupon {
+  margin: 24px auto;
+  padding: 16px;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.coupon input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.coupon button {
+  background: #d1505c;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.coupon button:hover {
+  background: #b03e47;
+}

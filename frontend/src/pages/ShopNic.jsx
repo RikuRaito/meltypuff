@@ -6,13 +6,19 @@ const products = [
         id: 11,
         name: 'Nasty 20K - パイナップルアイス',
         img: '/images/pineapple_20K.png',
-        price: 4980,
+        price: 4280,
     },
     {
         id:12,
-        name: 'Naty 8.5K - レッドエナジー',
+        name: 'Naty 20K - レッドエナジー',
         img: '/images/RedEnergy.jpg',
-        price: 3980
+        price: 4280
+    },
+    {
+        id:16,
+        name: 'Naty 20K - ピーチアイス',
+        img: '/images/PeachIce_20K.png',
+        price: 4280
     },
     {
         id:13,
