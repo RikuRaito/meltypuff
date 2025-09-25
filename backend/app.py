@@ -144,6 +144,7 @@ product_data_file = os.path.join(os.path.dirname(__file__), 'productDatabase.jso
 order_data_file = os.path.join(os.path.dirname(__file__), 'order.json')
 reset_requests = os.path.join(os.path.dirname(__file__), 'reset_requests.json')
 admin_account = os.path.join(os.path.dirname(__file__), 'admin_data.json')
+coupon = os.path.join(os.path.dirname(__file__), 'coupon.json')
 
 class User:
     def __init__(self, id, email,phone_number, password_hash,address_num,address_1,address_2):
@@ -270,6 +271,12 @@ def load_admin_data():
                 json.dump(DEFAULT_ADMIN, wf, ensure_ascii=False, indent=2)
             return DEFAULT_ADMIN
 
+def load_coupon():
+    if not os.path.exists(coupon) or os.path.getsize(coupon) == 0:
+        with open(coupon, 'w', encoding='utf-8') as f:
+            json.dump({}, f, ensure_ascii=False, indent=2)
+    with open(coupon, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
 # ルートエンドポイント
 @app.route('/api/health', methods=['GET'])
@@ -481,9 +488,10 @@ def products_info():
 def calc_amount():
     products = load_products()
     product_map = {p.id: p for p in products}
-
     data = request.get_json() or {}
     items = data.get('items', [])
+    coupon = data.get('coupon','')
+    print(f"coupon: {coupon}")
     total_amount = 0
 
     for item in items:
@@ -502,6 +510,20 @@ def calc_amount():
             break
 
     total_amount += shipping_fee
+
+    if coupon == 'TDS2027':
+        if qty <= 2:
+            return jsonify({
+                'amount': total_amount,
+                'shipping_fee': shipping_fee,
+                'message': "このクーポンは3つ以上のデバイスを購入時のみ適用可能です"
+            })
+        else:
+            total_amount *= 0.8
+            return jsonify({
+                'amount': total_amount,
+                'shipping_fee': shipping_fee
+            })
 
     return jsonify({
         'amount': total_amount,

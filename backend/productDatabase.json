@@ -11,14 +11,16 @@
     "displayname":"Lost Mary - グレープ"},
     {"id": 6, "price": 2200, "name": "LM_Melon",
     "displayname":"Lost Mary - メロン"},
-    {"id": 11, "price": 4980, "name": "Nasty_Pineapple_Ice",
+    {"id": 11, "price": 4280, "name": "Nasty_Pineapple_Ice",
     "displayname":"Nasty 20K - パイナップルアイス"},
-    {"id": 12, "price": 3980, "name": "Nasty_Red_Energy",
-    "displayname":"Nasty 8.5K - レッドエナジー"},
+    {"id": 12, "price": 4280, "name": "Nasty_Red_Energy",
+    "displayname":"Nasty 20K - レッドエナジー"},
     {"id": 13, "price": 3980, "name": "Nasty_Spairmint",
     "displayname": "Nasty 8.5K - ミント"},
     {"id": 14, "price": 3980, "name": "Nasty_Aloe_Grape",
     "displayname":"Nasty 8.5K - アロエグレープ"},
     {"id": 15, "price": 3980, "name": "Nasty_Slow_Blow",
-    "displayname":"Nasty 8.5K - スロウブロウ"}
+    "displayname":"Nasty 8.5K - スロウブロウ"},
+    {"id": 16, "price": 4280, "name": "Nasty_Peach_Ice",
+    "displayname": "Nasty 20K - ピーチアイス"}
 ]
